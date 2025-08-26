@@ -1,0 +1,64 @@
+Small immediate mode GUI using SDL3 and Cairo
+#############################################
+
+:date: 2025-08-27 00:13:28
+:tags: SDL3, cairo
+:author: Roland Smith <rsmith@xs4all.nl>
+
+.. Last modified: 2025-08-27T00:39:05+0200
+.. vim:spelllang=en
+
+Introduction
+============
+
+This is a small immediate mode GUI toolkit for SDL3_ and `Cairo graphics`, written in C.
+It was started as a proof of concept and my goal is to keep it simple.
+So for example it uses static positioning of the GUI elements, and it does not
+support keyboard focus.
+
+.. _SDL3: https://www.libsdl.org/
+.. _Cairo graphics: https://www.cairographics.org/
+
+
+All drawing is done on a Cairo surface that shares its pixels with an SDL
+texture.
+Cairo is used because of the much richer array of drawing primitives it
+supports and the fact that it uses anti-aliasing.
+
+This is free and unencumbered software released into the public domain.
+
+
+Files
+=====
+
+* ``cairo-imgui.h``, the header that declares functions and defines structures.
+* ``cairo-imgui.c``, the source file that defines the functions.
+* ``cairo-imgui-demo.c`` the source for the demo application.
+
+
+Requirements
+============
+
+* C compiler supporting C11. Development is done using ``clang``.
+* SDL3 library
+* Cairo graphics library.
+
+
+Building the demo
+=================
+
+A ``Makefile`` that has been tested with BSD make and GNU make is provided.
+The ``CFLAGS`` in the ``Makefile`` are geared towards ``clang``.
+You will probably need to adapt them when using ``gcc``.
+
+If you cannot use ``make``, the following command will build the demo on
+a UNIX-like system::
+
+    cc `pkg-config --cflags --libs sdl3 cairo` \
+    -o cairo-imgui-demo cairo-imgui-demo.c cairo-imgui.c
+
+If ``pkg-config`` is not available on your system, you will have to supply the
+locations of the headers and libraries yourself. For example::
+
+    cc -I<header directory> -L<library directory> -lSDL3 -lcairo -lm \
+    -o cairo-imgui-demo cairo-imgui-demo.c cairo-imgui.c
