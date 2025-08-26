@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-26T20:10:22+0200
+// Last modified: 2025-08-26T22:21:02+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -33,8 +33,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
   (void)argv;
   // Initialize context
   static State s = {0};
+  // Create GUI context.
   static GUI_context ctx = {0};
   s.ctx = &ctx;
+  // Set a theme for the GUI.
+  gui_theme_light(&ctx);
   // Make context available to other callbacks.
   *appstate = &s;
   if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -77,10 +80,16 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       puts("checkbox unset");
     }
   }
-  char *btns[3] = {"one", "two", "three"};
+  static const char *btns[2] = {"light", "dark"};
   static int radio = 0;
-  if(gui_radiobuttons(s->ctx, 50, 10, 3, btns, &radio)) {
-    printf("radio selection changed: %d\n", radio+1);
+  if (gui_radiobuttons(s->ctx, 50, 10, 2, btns, &radio)) {
+    if (radio == 0) {
+      gui_theme_light(s->ctx);
+      // puts("switching to light theme.");
+    } else if (radio == 1) {
+      gui_theme_dark(s->ctx);
+      // puts("switching to dark theme.");
+    }
   }
   gui_end(s->ctx);
   return SDL_APP_CONTINUE;

@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-26T21:15:06+0200
+// Last modified: 2025-08-26T22:22:31+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -27,10 +27,6 @@ void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
                     (char unsigned*)pixels, CAIRO_FORMAT_ARGB32, w, h, pitch);
   // Create cairo context to draw on the surface.
   out->ctx = cairo_create(out->surface);
-  // Set foreground and background color.
-  out->bg = (GUI_rgb){0.992157, 0.964706, 0.890196}; // Base3 #fdf6e3
-  out->fg = (GUI_rgb){0.345098, 0.431373, 0.458824}; // Base01 #586e75
-  out->acc = (GUI_rgb){0.14902, 0.545098, 0.823529}; // Blue #268bd2 
   // Set color to background, fill the surface)
   cairo_set_source_rgb(out->ctx, out->bg.r, out->bg.g, out->bg.b);
   cairo_paint(out->ctx);
@@ -47,6 +43,20 @@ void gui_end(GUI_context *ctx)
   SDL_UnlockTexture(ctx->texture);
   SDL_RenderTexture(ctx->renderer, ctx->texture, 0, 0);
   SDL_RenderPresent(ctx->renderer);
+}
+
+void gui_theme_light(GUI_context *ctx)
+{
+  ctx->bg = (GUI_rgb){0.992157, 0.964706, 0.890196}; // Base3 #fdf6e3
+  ctx->fg = (GUI_rgb){0.345098, 0.431373, 0.458824}; // Base01 #586e75
+  ctx->acc = (GUI_rgb){0.14902, 0.545098, 0.823529}; // Blue #268bd2 
+}
+
+void gui_theme_dark(GUI_context *ctx)
+{
+  ctx->bg = (GUI_rgb){0.027451, 0.211765, 0.258824}; // Base02 #073642
+  ctx->fg = (GUI_rgb){0.576471, 0.631373, 0.631373}; // Base1 #93a1a1
+  ctx->acc = (GUI_rgb){0.14902, 0.545098, 0.823529}; // Blue #268bd2 
 }
 
 SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
@@ -90,7 +100,7 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
 }
 
 
-bool gui_button(GUI_context *c, double x, double y, char *label)
+bool gui_button(GUI_context *c, double x, double y, const char *label)
 {
   assert(c);
   double rv = false;
@@ -128,7 +138,7 @@ bool gui_button(GUI_context *c, double x, double y, char *label)
   return rv;
 }
 
-bool gui_checkbox(GUI_context *c, double x, double y, char *label, bool *state)
+bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *state)
 {
   assert(c);
   double rv = false;
@@ -179,7 +189,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, char *label, bool *state)
 }
 
 bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
-                      char *labels[nlabels], int *state)
+                      const char *labels[nlabels], int *state)
 {
   assert(c);
   assert(labels);

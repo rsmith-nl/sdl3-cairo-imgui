@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-26T21:06:57+0200
+// Last modified: 2025-08-26T22:21:51+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -44,15 +44,19 @@ void gui_end(GUI_context *ctx);
 // Call this to process events in SDL_AppEvent.
 SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event);
 
+// Helpers
+void gui_theme_light(GUI_context *ctx);
+void gui_theme_dark(GUI_context *ctx);
+
 // Show a button. Returns true when the button is pressed.
-bool gui_button(GUI_context *c, double x, double y, char *label);
+bool gui_button(GUI_context *c, double x, double y, const char *label);
 
 // Show a checkbox. Returns true when it is checked.
 // Updates *state with the state of the checkbox.
-bool gui_checkbox(GUI_context *c, double x, double y, char *label, bool *state);
+bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *state);
 
 // Show radio buttons. Return true if the selection has changed.
 // Updates *state with the selected item.
 bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
-                      char *labels[nlabels], int *state);
+                      const char *labels[nlabels], int *state);
 
