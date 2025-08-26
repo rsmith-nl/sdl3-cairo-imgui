@@ -1,5 +1,5 @@
 # Package name and version: BASENAME-VMAJOR.VMINOR.VPATCH.tar.gz
-BASENAME = cairo-imguitest  ## Name for the project
+BASENAME = cairo-imgui-demo  ## Name for the project
 
 # Define the C compiler to be used, if not clang.
 #CC = cc
@@ -28,7 +28,7 @@ LIBS += -lm
 ##### Maintainer stuff goes here:
 DISTFILES = Makefile  ## Files that need to be included in the distribution.
 # Source files.
-SRCS = cairo-imguitest.c cairo-imgui.c
+SRCS = cairo-imgui-demo.c cairo-imgui.c
 
 ##### No editing necessary beyond this point
 ALL = $(BASENAME)
