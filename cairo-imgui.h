@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-26T23:29:47+0200
+// Last modified: 2025-08-27T00:24:41+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -36,6 +36,10 @@ typedef struct {
   GUI_rgb acc;
 } GUI_context;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // All calls to GUI elements should *only* be done between gui_begin and
 // gui_end;
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out);
@@ -63,3 +67,6 @@ bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *s
 bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
                       const char *labels[nlabels], int *state);
 
+#ifdef __cplusplus
+}
+#endif
