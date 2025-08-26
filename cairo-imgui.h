@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-26T22:21:51+0200
+// Last modified: 2025-08-26T23:29:47+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -50,6 +50,9 @@ void gui_theme_dark(GUI_context *ctx);
 
 // Show a button. Returns true when the button is pressed.
 bool gui_button(GUI_context *c, double x, double y, const char *label);
+
+// Show a single line text.
+void gui_label(GUI_context *c, double x, double y, const char *label);
 
 // Show a checkbox. Returns true when it is checked.
 // Updates *state with the state of the checkbox.

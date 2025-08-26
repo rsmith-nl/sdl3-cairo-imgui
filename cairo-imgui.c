@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-26T22:22:31+0200
+// Last modified: 2025-08-26T23:31:52+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -136,6 +136,20 @@ bool gui_button(GUI_context *c, double x, double y, const char *label)
   cairo_show_text(c->ctx, label);
   cairo_fill(c->ctx);
   return rv;
+}
+
+void gui_label(GUI_context *c, double x, double y, const char *label)
+{
+  assert(c);
+  double offset = 10.0;
+  cairo_text_extents_t ext;
+  cairo_text_extents(c->ctx, label, &ext);
+  // Draw the label
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_move_to(c->ctx, x + offset, y+offset+ext.height);
+  cairo_show_text(c->ctx, label);
+  cairo_fill(c->ctx);
 }
 
 bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *state)
