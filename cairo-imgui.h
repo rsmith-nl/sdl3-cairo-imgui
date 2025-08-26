@@ -5,7 +5,9 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-26T18:58:43+0200
+// Last modified: 2025-08-26T20:13:02+0200
+
+// Simple immediate mode GUI for SDL3 and Cairo.
 
 #pragma once
 
@@ -25,18 +27,13 @@ typedef struct {
   bool button_released;
 } GUI_context;
 
-// In *one* file where you include this header, before including this file.
-//
-//      #define CAIRO_IMGUI_IMPLEMENTATION
-//      #include "cairo-imgui.h"
-//
-// At this point, part of the code still lives in the event processing
-// function in cairo-button.c!
-
 // All calls to GUI elements should *only* be done between gui_begin and
 // gui_end;
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out);
 void gui_end(GUI_context *ctx);
+
+// Call this to process events in SDL_AppEvent.
+SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event);
 
 // Show a button. Returns true when the button is pressed.
 bool gui_button(GUI_context *c, double x, double y, char *label);

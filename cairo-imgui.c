@@ -5,11 +5,10 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-26T19:24:28+0200
+// Last modified: 2025-08-26T20:13:18+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
-#include "cairo/cairo.h"
 
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
 {
@@ -45,6 +44,47 @@ void gui_end(GUI_context *ctx)
   SDL_RenderTexture(ctx->renderer, ctx->texture, 0, 0);
   SDL_RenderPresent(ctx->renderer);
 }
+
+SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
+{
+  int w, h;
+  switch (event->type) {
+    case SDL_EVENT_WINDOW_RESIZED:
+      // Resize the texture if the window size changes.
+      SDL_DestroyTexture(ctx->texture);
+      SDL_GetWindowSize(SDL_GetRenderWindow(ctx->renderer), &w, &h);
+      ctx->texture = SDL_CreateTexture(ctx->renderer, SDL_PIXELFORMAT_ARGB8888,
+                                     SDL_TEXTUREACCESS_STREAMING, w, h);
+      break;
+    case SDL_EVENT_QUIT:
+      return SDL_APP_SUCCESS;
+      break;
+    case SDL_EVENT_KEY_UP:
+      if (event->key.key == 'q' || event->key.key == SDLK_ESCAPE) {
+        return SDL_APP_SUCCESS;
+      }
+      break;
+    case SDL_EVENT_MOUSE_MOTION:
+      ctx->mouse_x = event->motion.x;
+      ctx->mouse_y = event->motion.y;
+      break;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+      ctx->button_pressed = true;
+      ctx->button_released = false;
+      break;
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+      ctx->button_pressed = false;
+      ctx->button_released = true;
+      break;
+    default:
+      if (ctx->button_released) {
+        ctx->button_released = false;
+      }
+      break;
+  }
+  return SDL_APP_CONTINUE;
+}
+
 
 bool gui_button(GUI_context *c, double x, double y, char *label)
 {
