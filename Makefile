@@ -1,16 +1,16 @@
 # Package name and version: BASENAME-VMAJOR.VMINOR.VPATCH.tar.gz
 BASENAME = cairo-imguitest  ## Name for the project
 
-# Define the C compiler to be used, if not cc.
+# Define the C compiler to be used, if not clang.
 #CC = cc
 
 # The next lines are for debug builds.
-CFLAGS = -pipe -std=c11 -fPIC -g3 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
-                -Wshadow-all -Wmissing-field-initializers -Wpointer-arith \
+CFLAGS = -pipe -std=c11 -g3 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
+                -Wshadow -Wmissing-field-initializers -Wpointer-arith \
                 -fsanitize=address,undefined
 
 # The next lines are for release builds.
-#CFLAGS = -Os -pipe -std=c11 -fPIC -ffast-math -march=native
+#CFLAGS = -Os -pipe -std=c11 -ffast-math -march=native
 #CFLAGS += -DNDEBUG=1
 
 # For a static executable, add the following LFLAGS.
