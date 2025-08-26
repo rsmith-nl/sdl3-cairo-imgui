@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-26T20:13:18+0200
+// Last modified: 2025-08-26T21:15:06+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -27,8 +27,12 @@ void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
                     (char unsigned*)pixels, CAIRO_FORMAT_ARGB32, w, h, pitch);
   // Create cairo context to draw on the surface.
   out->ctx = cairo_create(out->surface);
-  // Set color to white, fill the surface)
-  cairo_set_source_rgb(out->ctx, 1.0, 1.0, 1.0);
+  // Set foreground and background color.
+  out->bg = (GUI_rgb){0.992157, 0.964706, 0.890196}; // Base3 #fdf6e3
+  out->fg = (GUI_rgb){0.345098, 0.431373, 0.458824}; // Base01 #586e75
+  out->acc = (GUI_rgb){0.14902, 0.545098, 0.823529}; // Blue #268bd2 
+  // Set color to background, fill the surface)
+  cairo_set_source_rgb(out->ctx, out->bg.r, out->bg.g, out->bg.b);
   cairo_paint(out->ctx);
 }
 
@@ -91,21 +95,20 @@ bool gui_button(GUI_context *c, double x, double y, char *label)
   assert(c);
   double rv = false;
   double offset = 10.0;
-  double r = 0.0, g = 0.0, b = 1.0;
   cairo_text_extents_t ext;
   cairo_text_extents(c->ctx, label, &ext);
   double width = 2*offset + ext.width;
   double height = 2*offset +ext.height;
   // Draw button outline.
   cairo_new_path(c->ctx);
-  cairo_set_source_rgb(c->ctx, r, g, b);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_rectangle(c->ctx, x, y, width, height);
   cairo_stroke(c->ctx);
   // draw/Fill inside if mouse is inside.
   if (c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height) {
     cairo_new_path(c->ctx);
-    cairo_set_source_rgb(c->ctx, 0.8, 0.8, 1.0);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+1, y+1, width-2, height-2);
     if (c->button_pressed) {
       cairo_fill(c->ctx);
@@ -118,7 +121,7 @@ bool gui_button(GUI_context *c, double x, double y, char *label)
   }
   // Draw the label
   cairo_new_path(c->ctx);
-  cairo_set_source_rgb(c->ctx, r, g, b);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_move_to(c->ctx, x + offset, y+offset+ext.height);
   cairo_show_text(c->ctx, label);
   cairo_fill(c->ctx);
@@ -131,21 +134,20 @@ bool gui_checkbox(GUI_context *c, double x, double y, char *label, bool *state)
   double rv = false;
   double offset = 10.0;
   double boxsize = 12.0;
-  double r = 0.0, g = 0.0, b = 1.0;
   cairo_text_extents_t ext;
   cairo_text_extents(c->ctx, label, &ext);
   double width = 2*offset + ext.width + boxsize;
   double height = 2*offset + ext.height>boxsize?ext.height:boxsize;
   // Draw checkbox outline.
   cairo_new_path(c->ctx);
-  cairo_set_source_rgb(c->ctx, r, g, b);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_rectangle(c->ctx, x, y, boxsize, boxsize);
   cairo_stroke(c->ctx);
   // draw/Fill inside if mouse is inside.
   if (c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height) {
     cairo_new_path(c->ctx);
-    cairo_set_source_rgb(c->ctx, 0.8, 0.8, 1.0);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+1, y+1, boxsize-2, boxsize-2);
     if (c->button_pressed) {
       cairo_fill(c->ctx);
@@ -160,7 +162,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, char *label, bool *state)
   // Draw selected mark if needed.
   if (*state) {
     cairo_new_path(c->ctx);
-    cairo_set_source_rgb(c->ctx, r, g, b);
+    cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
     cairo_move_to(c->ctx, x, y);
     cairo_rel_line_to(c->ctx, boxsize, boxsize);
     cairo_rel_move_to(c->ctx, 0, -boxsize);
@@ -169,7 +171,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, char *label, bool *state)
   }
   // Draw the label
   cairo_new_path(c->ctx);
-  cairo_set_source_rgb(c->ctx, r, g, b);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_move_to(c->ctx, x + boxsize + offset, y+boxsize/2+ext.height/2);
   cairo_show_text(c->ctx, label);
   cairo_fill(c->ctx);
@@ -185,7 +187,6 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   double rv = false;
   double offset = 10.0;
   double boxsize = 14.0;
-  double r = 0.0, g = 0.0, b = 1.0;
   double width, height;
   double heights[nlabels];
   double exty[nlabels];
@@ -210,7 +211,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   int cury = y + offset + boxsize/2;
   int curx = x + offset + boxsize/2;
   // Draw the buttons and the selected one
-  cairo_set_source_rgb(c->ctx, r, g, b);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   for (int k = 0; k < nlabels; k++) {
     cairo_new_path(c->ctx);
     cairo_arc(c->ctx, curx, cury, boxsize/2 - 1, 0.0, 2*M_PI);
@@ -226,7 +227,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   cury = y + offset + boxsize/2;
   curx += boxsize/2;
   cairo_new_path(c->ctx);
-  cairo_set_source_rgb(c->ctx, r, g, b);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   for (int k = 0; k < nlabels; k++) {
     cairo_move_to(c->ctx, curx, cury+exty[k]/2);
     cairo_show_text(c->ctx, labels[k]);
@@ -236,9 +237,8 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   // draw/Fill inside if mouse is inside.
   if (c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height) {
-    curx = x + offset + boxsize/2;
     cairo_new_path(c->ctx);
-    cairo_set_source_rgb(c->ctx, 0.8, 0.8, 1.0);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cury = y + offset + boxsize/2;
     curx = x + offset + boxsize/2;
     for (int k = 0; k < nlabels; k++) {

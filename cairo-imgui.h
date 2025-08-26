@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-26T20:13:02+0200
+// Last modified: 2025-08-26T21:06:57+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -18,6 +18,12 @@
 #include <cairo/cairo.h>
 
 typedef struct {
+  double r;
+  double g;
+  double b;
+} GUI_rgb;
+
+typedef struct {
   SDL_Renderer *renderer;
   SDL_Texture *texture;
   cairo_surface_t *surface;
@@ -25,6 +31,9 @@ typedef struct {
   int mouse_x, mouse_y;
   bool button_pressed;
   bool button_released;
+  GUI_rgb fg;
+  GUI_rgb bg;
+  GUI_rgb acc;
 } GUI_context;
 
 // All calls to GUI elements should *only* be done between gui_begin and
