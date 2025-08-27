@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T10:41:22+0200
+// Last modified: 2025-08-27T11:30:36+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -47,8 +47,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
   // The SDL_AppIterate callback should run ≈10× per second.
   SDL_SetHint(SDL_HINT_MAIN_CALLBACK_RATE, "10");
   // Create window and renderer.
-  int w = 300;
-  int h = 200;
+  int w = 400;
+  int h = 300;
   if (!SDL_CreateWindowAndRenderer("Cairo IMGUI demo", w, h, 0,
                                    &s.window, &s.renderer)) {
     SDL_Log("Couldn't create a window and renderer: %s", SDL_GetError());
@@ -75,7 +75,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
   gui_label(s->ctx, 60, 18, bbuf);
-  if (gui_button(s->ctx, 10, 160, "Close")) {
+  if (gui_button(s->ctx, 10, 260, "Close")) {
       return SDL_APP_SUCCESS;
   }
   static char *slabel = "Not checked";
@@ -99,8 +99,28 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       // puts("switching to dark theme.");
     }
   }
-  static int value = 0;
-  gui_slider(s->ctx, 10, 120, &value);
+  gui_label(s->ctx, 10, 124, "Red");
+  gui_label(s->ctx, 10, 154, "Green");
+  gui_label(s->ctx, 10, 184, "Blue");
+  static int red = 0, green = 0, blue = 0;
+  static GUI_rgb samplecolor = {0};
+  static char bred[10] = {0}, bgreen[10] = {0}, bblue[10] = {0};
+  if (gui_slider(s->ctx, 50, 120, &red)) {
+    samplecolor.r = (double)red/255.0;
+  }
+  if (gui_slider(s->ctx, 50, 150, &green)) {
+    samplecolor.g = (double)green/255.0;
+  }
+  if (gui_slider(s->ctx, 50, 180, &blue)) {
+    samplecolor.b = (double)blue/255.0;
+  }
+  snprintf(bred, 9, "%d", red);
+  snprintf(bgreen, 9, "%d", green);
+  snprintf(bblue, 9, "%d", blue);
+  gui_label(s->ctx, 346, 124, bred);
+  gui_label(s->ctx, 346, 154, bgreen);
+  gui_label(s->ctx, 346, 184, bblue);
+  gui_colorsample(s->ctx, 200.0, 10.0, 100.0, 100.0, &samplecolor);
   // You can still draw to s->ctx here...
   // End of GUI definition
   gui_end(s->ctx);
