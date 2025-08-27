@@ -25,7 +25,7 @@ void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
   // Create cairo surface which maps to the SDL texture.
   SDL_LockTexture(texture, 0, &pixels, &pitch);
   out->surface = cairo_image_surface_create_for_data(
-                    (char unsigned*)pixels, CAIRO_FORMAT_ARGB32, w, h, pitch);
+                   (char unsigned*)pixels, CAIRO_FORMAT_ARGB32, w, h, pitch);
   // Create cairo context to draw on the surface.
   out->ctx = cairo_create(out->surface);
   // Set color to background, fill the surface)
@@ -48,16 +48,28 @@ void gui_end(GUI_context *ctx)
 
 void gui_theme_light(GUI_context *ctx)
 {
-  ctx->bg = (GUI_rgb){0.992157, 0.964706, 0.890196}; // Base3 #fdf6e3
-  ctx->fg = (GUI_rgb){0.345098, 0.431373, 0.458824}; // Base01 #586e75
-  ctx->acc = (GUI_rgb){0.14902, 0.545098, 0.823529}; // Blue #268bd2 
+  ctx->bg = (GUI_rgb) {
+    0.992157, 0.964706, 0.890196
+  }; // Base3 #fdf6e3
+  ctx->fg = (GUI_rgb) {
+    0.345098, 0.431373, 0.458824
+  }; // Base01 #586e75
+  ctx->acc = (GUI_rgb) {
+    0.14902, 0.545098, 0.823529
+  }; // Blue #268bd2
 }
 
 void gui_theme_dark(GUI_context *ctx)
 {
-  ctx->bg = (GUI_rgb){0.027451, 0.211765, 0.258824}; // Base02 #073642
-  ctx->fg = (GUI_rgb){0.576471, 0.631373, 0.631373}; // Base1 #93a1a1
-  ctx->acc = (GUI_rgb){0.14902, 0.545098, 0.823529}; // Blue #268bd2 
+  ctx->bg = (GUI_rgb) {
+    0.027451, 0.211765, 0.258824
+  }; // Base02 #073642
+  ctx->fg = (GUI_rgb) {
+    0.576471, 0.631373, 0.631373
+  }; // Base1 #93a1a1
+  ctx->acc = (GUI_rgb) {
+    0.14902, 0.545098, 0.823529
+  }; // Blue #268bd2
 }
 
 SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
@@ -69,7 +81,7 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
       SDL_DestroyTexture(ctx->texture);
       SDL_GetWindowSize(SDL_GetRenderWindow(ctx->renderer), &w, &h);
       ctx->texture = SDL_CreateTexture(ctx->renderer, SDL_PIXELFORMAT_ARGB8888,
-                                     SDL_TEXTUREACCESS_STREAMING, w, h);
+                                       SDL_TEXTUREACCESS_STREAMING, w, h);
       break;
     case SDL_EVENT_QUIT:
       return SDL_APP_SUCCESS;

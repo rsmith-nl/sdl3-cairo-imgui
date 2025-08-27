@@ -69,10 +69,10 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   // GUI definition starts here.
   gui_begin(s->renderer, s->texture, s->ctx);
   if (gui_button(s->ctx, 10, 10, "Test")) {
-      puts("buttom pressed");
+    puts("buttom pressed");
   }
   if (gui_button(s->ctx, 10, 45, "Quit")) {
-      return SDL_APP_SUCCESS;
+    return SDL_APP_SUCCESS;
   }
   if (gui_checkbox(s->ctx, 10, 90, "Checkbox", &s->checked)) {
     if (s->checked) {

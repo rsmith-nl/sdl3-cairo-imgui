@@ -71,11 +71,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   static int count = 0;
   static char bbuf[40] = "Not pressed";
   if (gui_button(s->ctx, 10, 10, "Test")) {
-      snprintf(bbuf, 39, "Pressed %d times", ++count);
+    snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
   gui_label(s->ctx, 60, 18, bbuf);
   if (gui_button(s->ctx, 10, 260, "Close")) {
-      return SDL_APP_SUCCESS;
+    return SDL_APP_SUCCESS;
   }
   static char *slabel = "Not checked";
   if (gui_checkbox(s->ctx, 10, 50, "Checkbox", &s->checked)) {
