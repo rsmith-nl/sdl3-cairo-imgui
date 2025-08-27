@@ -5,11 +5,13 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T19:46:13+0200
+// Last modified: 2025-08-27T20:23:54+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
 #include "SDL3/SDL_keycode.h"
+
+static double m_width, m_height;
 
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
 {
@@ -31,6 +33,13 @@ void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
   // Set color to background, fill the surface)
   cairo_set_source_rgb(out->ctx, out->bg.r, out->bg.g, out->bg.b);
   cairo_paint(out->ctx);
+  // Set font size
+  cairo_set_font_size(out->ctx, 14.0);
+  // Determine the size of a capital M.
+  cairo_text_extents_t ext;
+  cairo_text_extents(out->ctx, "M", &ext);
+  m_width = ext.width;
+  m_height = ext.height;
 }
 
 void gui_end(GUI_context *ctx)
@@ -173,7 +182,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *s
   assert(c);
   double rv = false;
   double offset = 5.0;
-  double boxsize = 12.0;
+  double boxsize = m_width>m_height?m_width:m_height;
   cairo_text_extents_t ext;
   cairo_text_extents(c->ctx, label, &ext);
   double width = 2*offset + ext.width + boxsize;
@@ -226,7 +235,8 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   assert(nlabels > 0);
   double rv = false;
   double offset = 5.0;
-  double boxsize = 14.0;
+  //double boxsize = 14.0;
+  double boxsize = (m_width>m_height?m_width:m_height)*1.5;
   double width, height;
   double heights[nlabels];
   double exty[nlabels];
@@ -254,11 +264,11 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   for (int k = 0; k < nlabels; k++) {
     cairo_new_path(c->ctx);
-    cairo_arc(c->ctx, curx, cury, boxsize/2 - 1, 0.0, 2*M_PI);
+    cairo_arc(c->ctx, curx, cury, boxsize/2 - 2, 0.0, 2*M_PI);
     cairo_stroke(c->ctx);
     if (*state == k) {
       cairo_new_path(c->ctx);
-      cairo_arc(c->ctx, curx, cury, boxsize/2 - 3, 0.0, 2*M_PI);
+      cairo_arc(c->ctx, curx, cury, boxsize/2 - 4, 0.0, 2*M_PI);
       cairo_fill(c->ctx);
     }
     cury += heights[k];
