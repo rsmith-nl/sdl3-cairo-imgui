@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T09:36:36+0200
+// Last modified: 2025-08-27T10:11:25+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -89,8 +89,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   gui_label(s->ctx, 80, 51.5, slabel);
   static const char *btns[2] = {"light", "dark"};
   static int radio = 1;
-  gui_label(s->ctx, 140, 110, "Theme");
-  if (gui_radiobuttons(s->ctx, 140, 120, 2, btns, &radio)) {
+  gui_label(s->ctx, 10, 70, "Theme");
+  if (gui_radiobuttons(s->ctx, 10, 80, 2, btns, &radio)) {
     if (radio == 0) {
       gui_theme_light(s->ctx);
       // puts("switching to light theme.");
