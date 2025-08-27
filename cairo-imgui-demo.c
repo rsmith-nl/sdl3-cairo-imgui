@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T09:21:37+0200
+// Last modified: 2025-08-27T09:36:36+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -70,24 +70,26 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   gui_begin(s->renderer, s->texture, s->ctx);
   // Buttom + label to show counter...
   static int count = 0;
-  static char buf[40] = "Not pressed";
+  static char bbuf[40] = "Not pressed";
   if (gui_button(s->ctx, 10, 10, "Test")) {
-      snprintf(buf, 39, "Pressed %d times", ++count);
+      snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
-  gui_label(s->ctx, 60, 18, buf);
+  gui_label(s->ctx, 60, 18, bbuf);
   if (gui_button(s->ctx, 10, 160, "Close")) {
       return SDL_APP_SUCCESS;
   }
+  static char *slabel = "Not checked";
   if (gui_checkbox(s->ctx, 10, 50, "Checkbox", &s->checked)) {
     if (s->checked) {
-      puts("checkbox set");
+      slabel = "Checked";
     } else {
-      puts("checkbox unset");
+      slabel = "Not checked";
     }
   }
+  gui_label(s->ctx, 80, 51.5, slabel);
   static const char *btns[2] = {"light", "dark"};
   static int radio = 1;
-  gui_label(s->ctx, 150, 110, "Theme");
+  gui_label(s->ctx, 140, 110, "Theme");
   if (gui_radiobuttons(s->ctx, 140, 120, 2, btns, &radio)) {
     if (radio == 0) {
       gui_theme_light(s->ctx);
