@@ -5,14 +5,13 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T11:30:36+0200
+// Last modified: 2025-08-27T11:38:07+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <cairo/cairo.h>
 
-#define CAIRO_IMGUI_IMPLEMENTATION
 #include "cairo-imgui.h"
 
 #include <assert.h>
