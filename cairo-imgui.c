@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T09:06:11+0200
+// Last modified: 2025-08-27T09:30:24+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -208,7 +208,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   assert(labels);
   assert(nlabels > 0);
   double rv = false;
-  double offset = 10.0;
+  double offset = 5.0;
   double boxsize = 14.0;
   double width, height;
   double heights[nlabels];
@@ -231,8 +231,8 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   width += 2*offset + boxsize;
   height += 2*offset;
   // Draw the buttons.
-  int cury = y + offset + boxsize/2;
-  int curx = x + offset + boxsize/2;
+  int cury = y + boxsize/2;
+  int curx = x + boxsize/2;
   // Draw the buttons and the selected one
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   for (int k = 0; k < nlabels; k++) {
@@ -247,8 +247,8 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
     cury += heights[k];
   }
   // Draw the labels
-  cury = y + offset + boxsize/2;
-  curx += boxsize/2;
+  cury = y + offset;
+  curx = x + boxsize + offset;
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   for (int k = 0; k < nlabels; k++) {
@@ -262,8 +262,8 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
       c->mouse_y >= y && (c->mouse_y - y) <= height) {
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
-    cury = y + offset + boxsize/2;
-    curx = x + offset + boxsize/2;
+    cury = y + boxsize/2;
+    curx = x + boxsize/2;
     for (int k = 0; k < nlabels; k++) {
       if (fabs((double)c->mouse_y - cury) < exty[k]/2) {
         // This is the label!
