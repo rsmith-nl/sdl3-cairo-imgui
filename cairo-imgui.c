@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T09:05:36+0200
+// Last modified: 2025-08-27T09:06:11+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -155,7 +155,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *s
 {
   assert(c);
   double rv = false;
-  double offset = 10.0;
+  double offset = 5.0;
   double boxsize = 12.0;
   cairo_text_extents_t ext;
   cairo_text_extents(c->ctx, label, &ext);
