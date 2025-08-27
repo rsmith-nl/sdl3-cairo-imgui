@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T11:07:11+0200
+// Last modified: 2025-08-27T11:20:41+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -302,6 +302,7 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *value)
 {
   assert(c);
   assert(value);
+  bool changed = false;
   const double xsize = 20.0;
   const double ysize = 10.0;
   const double offset = 4.0;
@@ -321,8 +322,11 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *value)
     cairo_stroke(c->ctx);
     // Update value if mouse is inside and button is pressed
     if (c->button_pressed) {
-      double dvalue = c->mouse_x - x - offset - xsize/2.0;
-      *value = round(dvalue);
+      int newvalue = round(c->mouse_x - x - offset - xsize/2.0);
+      if (newvalue != *value) {
+        *value = newvalue;
+        changed = true;
+      }
     }
   }
   // Clamp value within allowed range.
@@ -337,7 +341,5 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *value)
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_rectangle(c->ctx, sliderpos, y + offset, xsize, ysize);
   cairo_fill(c->ctx);
-
-
-  return false;
+  return changed;
 }
