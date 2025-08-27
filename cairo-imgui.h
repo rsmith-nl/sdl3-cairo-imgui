@@ -1,11 +1,11 @@
 // file: cairo-imgui.h
-// vim:fileencoding=utf-8:ft=cpp:tabstop=2
+// vim:fileencoding=utf-8:ft=c:tabstop=2
 // This is free and unencumbered software released into the public domain.
 //
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-27T10:50:10+0200
+// Last modified: 2025-08-27T19:26:24+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -13,6 +13,7 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <SDL3/SDL.h>
 #include <cairo/cairo.h>
@@ -28,7 +29,9 @@ typedef struct {
   SDL_Texture *texture;
   cairo_surface_t *surface;
   cairo_t *ctx;
-  int mouse_x, mouse_y;
+  int32_t mouse_x, mouse_y;
+  int32_t keycode;
+  int16_t mod;
   bool button_pressed;
   bool button_released;
   GUI_rgb fg;

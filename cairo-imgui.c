@@ -5,11 +5,11 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T11:20:41+0200
+// Last modified: 2025-08-27T19:46:13+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
-#include <stdbool.h>
+#include "SDL3/SDL_keycode.h"
 
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
 {
@@ -37,6 +37,8 @@ void gui_end(GUI_context *ctx)
 {
   assert(ctx);
   ctx->button_released = false;
+  ctx->keycode = 0;
+  ctx->mod = 0;
   // Clean up
   cairo_destroy(ctx->ctx);
   cairo_surface_destroy(ctx->surface);
@@ -90,6 +92,8 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
       if (event->key.key == 'q' || event->key.key == SDLK_ESCAPE) {
         return SDL_APP_SUCCESS;
       }
+      ctx->keycode = event->key.key;
+      ctx->mod = event->key.mod;
       break;
     case SDL_EVENT_MOUSE_MOTION:
       ctx->mouse_x = event->motion.x;
@@ -138,7 +142,7 @@ bool gui_button(GUI_context *c, double x, double y, const char *label)
     } else {
       cairo_stroke(c->ctx);
     }
-    if (c->button_released) {
+    if (c->button_released || c->keycode == SDLK_RETURN) {
       rv = true;
     }
   }
@@ -190,7 +194,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *s
     } else {
       cairo_stroke(c->ctx);
     }
-    if (c->button_released) {
+    if (c->button_released || c->keycode == SDLK_RETURN) {
       rv = true;
       *state = !*state;
     }
@@ -287,7 +291,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
         } else {
           cairo_stroke(c->ctx);
         }
-        if (c->button_released) {
+        if (c->button_released || c->keycode == SDLK_RETURN) {
           rv = true;
           *state = k;
         }
@@ -333,12 +337,19 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *value)
     cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
     cairo_stroke(c->ctx);
     // Update value if mouse is inside and button is pressed
-    if (c->button_pressed) {
+    if (c->button_pressed || c->keycode == SDLK_RETURN) {
       int newvalue = round(c->mouse_x - x - offset - xsize/2.0);
       if (newvalue != *value) {
         *value = newvalue;
         changed = true;
       }
+    }
+    if (c->keycode == SDLK_LEFT) {
+      (*value)--;
+      changed = true;
+    } else if (c->keycode == SDLK_RIGHT) {
+      (*value)++;
+      changed = true;
     }
   }
   // Clamp value within allowed range.
