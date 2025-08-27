@@ -5,13 +5,12 @@ BASENAME = cairo-imgui-demo  ## Name for the project
 #CC = cc
 
 # The next lines are for debug builds.
-CFLAGS = -pipe -std=c11 -g3 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
+#CFLAGS = -pipe -std=c11 -g3 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
                 -Wshadow -Wmissing-field-initializers -Wpointer-arith \
                 -fsanitize=address,undefined
 
 # The next lines are for release builds.
-#CFLAGS = -Os -pipe -std=c11 -ffast-math -march=native
-#CFLAGS += -DNDEBUG=1
+CFLAGS = -Os -pipe -std=c11 -ffast-math -march=native
 
 # For a static executable, add the following LFLAGS.
 #LFLAGS += --static
