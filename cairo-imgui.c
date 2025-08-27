@@ -5,10 +5,11 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T10:23:54+0200
+// Last modified: 2025-08-27T11:00:16+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
+#include <stdbool.h>
 
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
 {
@@ -289,9 +290,54 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
 void gui_colorsample(GUI_context *c, const double x, const double y,
                      const double w, const double h, const GUI_rgb *color)
 {
+  assert(c);
+  assert(color);
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, color->r, color->g, color->b);
   cairo_rectangle(c->ctx, x, y, w, h);
   cairo_fill(c->ctx);
 }
 
+bool gui_slider(GUI_context *c, const double x, const double y, int *value)
+{
+  assert(c);
+  assert(value);
+  const double xsize = 20.0;
+  const double ysize = 10.0;
+  const double offset = 4.0;
+  const double width = 255.0 + xsize + 2*offset;
+  const double height = ysize + 2*offset;
+  // Draw outside rectangle
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_rectangle(c->ctx, x, y, width, height);
+  cairo_stroke(c->ctx);
+  if (c->mouse_x >= x && (c->mouse_x - x) <= width &&
+      c->mouse_y >= y && (c->mouse_y - y) <= height) {
+    // draw inside if mouse is inside.
+    cairo_new_path(c->ctx);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
+    cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
+    cairo_stroke(c->ctx);
+    // Update value if mouse is inside and button is pressed
+    if (c->button_pressed) {
+      double dvalue = c->mouse_x - x - offset - xsize/2.0;
+      *value = round(dvalue);
+    }
+  }
+  // Clamp value within allowed range.
+  if (*value < 0) {
+    *value = 0;
+  } else if (*value > 255) {
+    *value = 255;
+  }
+  // Draw slider
+  double sliderpos = (double)*value + xsize/2.0 + offset;
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_rectangle(c->ctx, sliderpos, y + offset, xsize, ysize);
+  cairo_fill(c->ctx);
+
+
+  return false;
+}

@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-27T10:25:45+0200
+// Last modified: 2025-08-27T10:50:10+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -70,6 +70,10 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
 // Show a color
 void gui_colorsample(GUI_context *c, const double x, const double y,
                      const double w, const double h, const GUI_rgb *color);
+
+// Show a slider. This can have a value between 0 and 255.
+// Returns true when the value has changed.
+bool gui_slider(GUI_context *c, const double x, const double y, int *value);
 
 #ifdef __cplusplus
 }

@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T10:11:25+0200
+// Last modified: 2025-08-27T10:41:22+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -47,7 +47,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
   // The SDL_AppIterate callback should run ≈10× per second.
   SDL_SetHint(SDL_HINT_MAIN_CALLBACK_RATE, "10");
   // Create window and renderer.
-  int w = 200;
+  int w = 300;
   int h = 200;
   if (!SDL_CreateWindowAndRenderer("Cairo IMGUI demo", w, h, 0,
                                    &s.window, &s.renderer)) {
@@ -99,6 +99,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       // puts("switching to dark theme.");
     }
   }
+  static int value = 0;
+  gui_slider(s->ctx, 10, 120, &value);
   // You can still draw to s->ctx here...
   // End of GUI definition
   gui_end(s->ctx);
