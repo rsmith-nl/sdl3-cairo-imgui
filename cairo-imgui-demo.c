@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T11:38:07+0200
+// Last modified: 2025-08-27T20:21:22+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -73,7 +73,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   if (gui_button(s->ctx, 10, 10, "Test")) {
     snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
-  gui_label(s->ctx, 60, 18, bbuf);
+  gui_label(s->ctx, 75, 17, bbuf);
   if (gui_button(s->ctx, 10, 260, "Close")) {
     return SDL_APP_SUCCESS;
   }
@@ -85,11 +85,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       slabel = "Not checked";
     }
   }
-  gui_label(s->ctx, 80, 51.5, slabel);
+  gui_label(s->ctx, 100, 50, slabel);
   static const char *btns[2] = {"light", "dark"};
   static int radio = 1;
   gui_label(s->ctx, 10, 70, "Theme");
-  if (gui_radiobuttons(s->ctx, 10, 80, 2, btns, &radio)) {
+  if (gui_radiobuttons(s->ctx, 10, 82, 2, btns, &radio)) {
     if (radio == 0) {
       gui_theme_light(s->ctx);
       // puts("switching to light theme.");
@@ -104,22 +104,22 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   static int red = 0, green = 0, blue = 0;
   static GUI_rgb samplecolor = {0};
   static char bred[10] = {0}, bgreen[10] = {0}, bblue[10] = {0};
-  if (gui_slider(s->ctx, 50, 120, &red)) {
+  if (gui_slider(s->ctx, 60, 120, &red)) {
     samplecolor.r = (double)red/255.0;
   }
-  if (gui_slider(s->ctx, 50, 150, &green)) {
+  if (gui_slider(s->ctx, 60, 150, &green)) {
     samplecolor.g = (double)green/255.0;
   }
-  if (gui_slider(s->ctx, 50, 180, &blue)) {
+  if (gui_slider(s->ctx, 60, 180, &blue)) {
     samplecolor.b = (double)blue/255.0;
   }
   snprintf(bred, 9, "%d", red);
   snprintf(bgreen, 9, "%d", green);
   snprintf(bblue, 9, "%d", blue);
-  gui_label(s->ctx, 346, 124, bred);
-  gui_label(s->ctx, 346, 154, bgreen);
-  gui_label(s->ctx, 346, 184, bblue);
-  gui_colorsample(s->ctx, 200.0, 10.0, 100.0, 100.0, &samplecolor);
+  gui_label(s->ctx, 355, 124, bred);
+  gui_label(s->ctx, 355, 154, bgreen);
+  gui_label(s->ctx, 355, 184, bblue);
+  gui_colorsample(s->ctx, 250.0, 10.0, 100.0, 100.0, &samplecolor);
   // You can still draw to s->ctx here...
   // End of GUI definition
   gui_end(s->ctx);
