@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T11:00:16+0200
+// Last modified: 2025-08-27T11:07:11+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -332,7 +332,7 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *value)
     *value = 255;
   }
   // Draw slider
-  double sliderpos = (double)*value + xsize/2.0 + offset;
+  double sliderpos = x + (double)*value + offset;
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_rectangle(c->ctx, sliderpos, y + offset, xsize, ysize);
