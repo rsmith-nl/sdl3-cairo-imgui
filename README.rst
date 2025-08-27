@@ -5,16 +5,20 @@ Small immediate mode GUI using SDL3 and Cairo
 :tags: SDL3, cairo
 :author: Roland Smith <rsmith@xs4all.nl>
 
-.. Last modified: 2025-08-27T00:39:05+0200
+.. Last modified: 2025-08-27T15:50:35+0200
 .. vim:spelllang=en
 
 Introduction
 ============
 
-This is a small immediate mode GUI toolkit for SDL3_ and `Cairo graphics`, written in C.
+This is a small immediate mode GUI toolkit for SDL3_ and `Cairo graphics`, written in C11.
 It was started as a proof of concept and my goal is to keep it simple.
-So for example it uses static positioning of the GUI elements, and it does not
-support keyboard focus.
+This means;
+
+* It uses Cairo to paint the GUI elements directly, not using a command
+  buffer.
+* It only supports static positioning, there is no layout engine.
+* It does not support keyboard focus.
 
 .. _SDL3: https://www.libsdl.org/
 .. _Cairo graphics: https://www.cairographics.org/
@@ -23,7 +27,7 @@ support keyboard focus.
 All drawing is done on a Cairo surface that shares its pixels with an SDL
 texture.
 Cairo is used because of the much richer array of drawing primitives it
-supports and the fact that it uses anti-aliasing.
+supports and it uses anti-aliasing.
 
 This is free and unencumbered software released into the public domain.
 
@@ -35,12 +39,15 @@ Files
 * ``cairo-imgui.c``, the source file that defines the functions.
 * ``cairo-imgui-demo.c`` the source for the demo application.
 
+The file ``compile_flags.txt`` exists for clang-based tooling like
+``clang-check``.
+
 
 Requirements
 ============
 
 * C compiler supporting C11. Development is done using ``clang``.
-* SDL3 library
+* SDL3 library.
 * Cairo graphics library.
 
 
