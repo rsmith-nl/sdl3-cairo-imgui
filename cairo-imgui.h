@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-27T19:26:24+0200
+// Last modified: 2025-08-29T20:44:03+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -13,6 +13,7 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include <SDL3/SDL.h>
@@ -39,9 +40,21 @@ typedef struct {
   GUI_rgb acc;
 } GUI_context;
 
+#define SBUF_SIZE 256
+typedef struct {
+  char data[SBUF_SIZE];
+  ptrdiff_t used;
+  ptrdiff_t cursorpos;
+} Sbuf;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Some widgets need external state. This is provided by a pointer to external
+// data named “state”.
+// This data should either be a global, or should be “static” in the function
+// that contains the GUI calls.
 
 // All calls to GUI elements and all Cairo calls should *only* be done between
 // gui_begin and gui_end;
@@ -72,11 +85,23 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
 
 // Show a color
 void gui_colorsample(GUI_context *c, const double x, const double y,
-                     const double w, const double h, const GUI_rgb *color);
+                     const double w, const double h, const GUI_rgb *state);
 
 // Show a slider. This can have a value between 0 and 255.
 // Returns true when the value has changed.
-bool gui_slider(GUI_context *c, const double x, const double y, int *value);
+// The value is written to the variable “state”
+bool gui_slider(GUI_context *c, const double x, const double y, int *state);
+
+// TODO:
+// * edit field
+// * spinner
+// * list box
+// * progress bar
+//
+// Optional
+// * cycle button (same interface as radiobutton)
+// * info bar (label with different background color)
+
 
 #ifdef __cplusplus
 }

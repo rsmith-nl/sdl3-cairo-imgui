@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-27T20:23:54+0200
+// Last modified: 2025-08-29T20:45:42+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -314,20 +314,20 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
 }
 
 void gui_colorsample(GUI_context *c, const double x, const double y,
-                     const double w, const double h, const GUI_rgb *color)
+                     const double w, const double h, const GUI_rgb *state)
 {
   assert(c);
-  assert(color);
+  assert(state);
   cairo_new_path(c->ctx);
-  cairo_set_source_rgb(c->ctx, color->r, color->g, color->b);
+  cairo_set_source_rgb(c->ctx, state->r, state->g, state->b);
   cairo_rectangle(c->ctx, x, y, w, h);
   cairo_fill(c->ctx);
 }
 
-bool gui_slider(GUI_context *c, const double x, const double y, int *value)
+bool gui_slider(GUI_context *c, const double x, const double y, int *state)
 {
   assert(c);
-  assert(value);
+  assert(state);
   bool changed = false;
   const double xsize = 20.0;
   const double ysize = 10.0;
@@ -346,30 +346,30 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *value)
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
     cairo_stroke(c->ctx);
-    // Update value if mouse is inside and button is pressed
+    // Update state if mouse is inside and button is pressed
     if (c->button_pressed || c->keycode == SDLK_RETURN) {
-      int newvalue = round(c->mouse_x - x - offset - xsize/2.0);
-      if (newvalue != *value) {
-        *value = newvalue;
+      int newstate = round(c->mouse_x - x - offset - xsize/2.0);
+      if (newstate != *state) {
+        *state = newstate;
         changed = true;
       }
     }
     if (c->keycode == SDLK_LEFT) {
-      (*value)--;
+      (*state)--;
       changed = true;
     } else if (c->keycode == SDLK_RIGHT) {
-      (*value)++;
+      (*state)++;
       changed = true;
     }
   }
-  // Clamp value within allowed range.
-  if (*value < 0) {
-    *value = 0;
-  } else if (*value > 255) {
-    *value = 255;
+  // Clamp state within allowed range.
+  if (*state < 0) {
+    *state = 0;
+  } else if (*state > 255) {
+    *state = 255;
   }
   // Draw slider
-  double sliderpos = x + (double)*value + offset;
+  double sliderpos = x + (double)*state + offset;
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_rectangle(c->ctx, sliderpos, y + offset, xsize, ysize);
