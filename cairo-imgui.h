@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-08-29T20:44:03+0200
+// Last modified: 2025-08-29T22:03:06+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -92,13 +92,19 @@ void gui_colorsample(GUI_context *c, const double x, const double y,
 // The value is written to the variable “state”
 bool gui_slider(GUI_context *c, const double x, const double y, int *state);
 
+bool gui_ispinner(GUI_context *c, const double x, const double y,
+                 int32_t min, int32_t max, int32_t*state);
+
+
 // TODO:
-// * edit field
 // * spinner
+// * edit field
 // * list box
 // * progress bar
+// * image
 //
 // Optional
+// * Add icons to buttons.
 // * cycle button (same interface as radiobutton)
 // * info bar (label with different background color)
 

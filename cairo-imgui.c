@@ -5,11 +5,12 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-29T20:45:42+0200
+// Last modified: 2025-08-29T22:06:37+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
-#include "SDL3/SDL_keycode.h"
+#include <stdio.h>
+#include <cairo/cairo.h>
 
 static double m_width, m_height;
 
@@ -375,4 +376,51 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *state)
   cairo_rectangle(c->ctx, sliderpos, y + offset, xsize, ysize);
   cairo_fill(c->ctx);
   return changed;
+}
+
+bool gui_ispinner(GUI_context *c, const double x, const double y,
+                 int32_t min, int32_t max, int32_t*state)
+{
+  assert(c);
+  assert(state);
+  assert(max > min);
+  bool rv = false;
+  // Determine the amount of characters needed
+  double maxw = ceil(log10(fabs((double)max))) * m_width;
+  const double offset = 4.0;
+  const double boxsize = 12.0;
+  double width = maxw + 2 * offset + 2*boxsize;
+  double height = m_height + 2 * offset;
+  cairo_fill(c->ctx);
+  // Draw the outline.
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_rectangle(c->ctx, x, y, width, height);
+  cairo_stroke(c->ctx);
+  // TODO: draw the spinner buttons.
+  if (c->mouse_x >= x && (c->mouse_x - x) <= width &&
+      c->mouse_y >= y && (c->mouse_y - y) <= height) {
+    // Draw inside accent if mouse is inside.
+    cairo_new_path(c->ctx);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
+    cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
+    cairo_stroke(c->ctx);
+    // TODO: Update the value when clicked within the spinner buttons.
+  }
+  // Clamp the state between min and max.
+  if (*state > max) {
+    *state = max;
+  } else if (*state < min) {
+    *state = min;
+  }
+  // Draw the number
+  char buf[20];
+  snprintf(buf, 19, "%d", *state);
+  cairo_text_extents_t ext;
+  cairo_text_extents(c->ctx, buf, &ext);
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_move_to(c->ctx, x, y+offset+ext.height);
+  cairo_show_text(c->ctx, buf);
+  return rv;
 }
