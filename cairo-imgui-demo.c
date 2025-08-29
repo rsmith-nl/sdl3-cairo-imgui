@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-27T20:21:22+0200
+// Last modified: 2025-08-29T22:13:00+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -98,6 +98,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       // puts("switching to dark theme.");
     }
   }
+  // Color sliders and sample.
   gui_label(s->ctx, 10, 124, "Red");
   gui_label(s->ctx, 10, 154, "Green");
   gui_label(s->ctx, 10, 184, "Blue");
@@ -120,6 +121,15 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   gui_label(s->ctx, 355, 154, bgreen);
   gui_label(s->ctx, 355, 184, bblue);
   gui_colorsample(s->ctx, 250.0, 10.0, 100.0, 100.0, &samplecolor);
+
+  // Spinner
+  static int32_t ispinner = 17;
+  gui_ispinner(s->ctx, 65.0, 210.0, 0, 255, &ispinner);
+
+  // Show cursor position to help with layout.
+  char buf[80] = {0};
+  snprintf(buf, 79, "x = %d, y = %d", s->ctx->mouse_x, s->ctx->mouse_y);
+  gui_label(s->ctx, 100, 270, buf);
   // You can still draw to s->ctx here...
   // End of GUI definition
   gui_end(s->ctx);

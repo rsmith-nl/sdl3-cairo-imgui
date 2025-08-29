@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-29T22:06:37+0200
+// Last modified: 2025-08-29T22:14:19+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -387,7 +387,7 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   bool rv = false;
   // Determine the amount of characters needed
   double maxw = ceil(log10(fabs((double)max))) * m_width;
-  const double offset = 4.0;
+  const double offset = 6.0;
   const double boxsize = 12.0;
   double width = maxw + 2 * offset + 2*boxsize;
   double height = m_height + 2 * offset;
@@ -420,7 +420,7 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   cairo_text_extents(c->ctx, buf, &ext);
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
-  cairo_move_to(c->ctx, x, y+offset+ext.height);
+  cairo_move_to(c->ctx, x+offset, y+offset+ext.height);
   cairo_show_text(c->ctx, buf);
   return rv;
 }
