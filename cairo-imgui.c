@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-08-29T22:14:19+0200
+// Last modified: 2025-09-02T00:36:08+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -391,7 +391,7 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   const double boxsize = 12.0;
   double width = maxw + 2 * offset + 2*boxsize;
   double height = m_height + 2 * offset;
-  cairo_fill(c->ctx);
+  //cairo_fill(c->ctx);
   // Draw the outline.
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
@@ -424,3 +424,40 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   cairo_show_text(c->ctx, buf);
   return rv;
 }
+
+bool gui_edit(GUI_context *c, const double x, const double y, const double w,
+              GUI_editstate *state)
+{
+  assert(c);
+  assert(state);
+  const double offset = 6.0;
+  double height = m_height + 2 * offset;
+  // Draw the outline.
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_rectangle(c->ctx, x, y, w, height);
+  cairo_stroke(c->ctx);
+  if (c->mouse_x >= x && (c->mouse_x - x) <= w &&
+      c->mouse_y >= y && (c->mouse_y - y) <= height) {
+    // Draw inside accent if mouse is inside.
+    cairo_new_path(c->ctx);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
+    cairo_rectangle(c->ctx, x+2, y+2, w-4, height-4);
+    cairo_stroke(c->ctx);
+    if (c->keycode == SDLK_LEFT) { // move cursor left
+      if (state->cursorpos > 0) {
+        state->cursorpos--;
+      }
+    } else if (c->keycode == SDLK_RIGHT) { // move cursor right
+      if (state->cursorpos < EBUF_SIZE-1) {
+        state->cursorpos++;
+      }
+    } else if (c->keycode >= 0x20 && c->keycode <= 0x7e) { // insert key.
+      // TODO: insert/append character.
+    }
+  }
+
+
+  return false;
+}
+
