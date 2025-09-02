@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-08-29T22:13:00+0200
+// Last modified: 2025-09-02T07:21:48+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -121,11 +121,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   gui_label(s->ctx, 355, 154, bgreen);
   gui_label(s->ctx, 355, 184, bblue);
   gui_colorsample(s->ctx, 250.0, 10.0, 100.0, 100.0, &samplecolor);
-
   // Spinner
   static int32_t ispinner = 17;
   gui_ispinner(s->ctx, 65.0, 210.0, 0, 255, &ispinner);
-
+  // Edit box
+  static GUI_editstate es = {0};
+  gui_editbox(s->ctx, 150.0, 210.0, 100.0, &es);
   // Show cursor position to help with layout.
   char buf[80] = {0};
   snprintf(buf, 79, "x = %d, y = %d", s->ctx->mouse_x, s->ctx->mouse_y);

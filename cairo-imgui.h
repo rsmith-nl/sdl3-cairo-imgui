@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-09-02T00:18:29+0200
+// Last modified: 2025-09-02T07:21:42+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -96,8 +96,8 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *state);
 bool gui_ispinner(GUI_context *c, const double x, const double y,
                  int32_t min, int32_t max, int32_t*state);
 
-bool gui_edit(GUI_context *c, const double x, const double y, const double w,
-              GUI_editstate *state);
+bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
+                 GUI_editstate *state);
 
 // TODO:
 // * spinner

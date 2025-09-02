@@ -5,12 +5,13 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-02T00:36:08+0200
+// Last modified: 2025-09-02T07:21:33+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
 #include <stdio.h>
 #include <cairo/cairo.h>
+#include "SDL3/SDL_keycode.h"
 
 static double m_width, m_height;
 
@@ -425,13 +426,14 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   return rv;
 }
 
-bool gui_edit(GUI_context *c, const double x, const double y, const double w,
-              GUI_editstate *state)
+bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
+                 GUI_editstate *state)
 {
   assert(c);
   assert(state);
   const double offset = 6.0;
   double height = m_height + 2 * offset;
+  bool rv = false;
   // Draw the outline.
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
@@ -444,20 +446,45 @@ bool gui_edit(GUI_context *c, const double x, const double y, const double w,
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+2, y+2, w-4, height-4);
     cairo_stroke(c->ctx);
+    // Process keys
     if (c->keycode == SDLK_LEFT) { // move cursor left
       if (state->cursorpos > 0) {
         state->cursorpos--;
       }
     } else if (c->keycode == SDLK_RIGHT) { // move cursor right
-      if (state->cursorpos < EBUF_SIZE-1) {
+      if (state->cursorpos < state->used) {
         state->cursorpos++;
       }
-    } else if (c->keycode >= 0x20 && c->keycode <= 0x7e) { // insert key.
-      // TODO: insert/append character.
+    } else if (c->keycode >= 0x20 && c->keycode <= 0x7e) { // insert regular key.
+      if (state->cursorpos == state->used) {  // cursor at end
+        state->data[state->used++] = (char)c->keycode;
+        state->cursorpos++;
+      } else if (state->cursorpos < state->used) {  // cursor inside text
+        for (int movecount = state->used - state->cursorpos;movecount > 0; movecount--) {
+          state->data[state->used++] = state->data[state->cursorpos++];
+        }
+      }
+    } else if (c->keycode == SDLK_END) {
+      state->cursorpos = state->used;
+    } else if (c->keycode == SDLK_HOME) {
+      state->cursorpos = 0;
     }
+    // TODO: handle deleting a character.
+    // TODO: draw the cursor
+    cairo_new_path(c->ctx);
+    cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
+    cairo_move_to(c->ctx, x+offset, y+offset);
+    cairo_rel_line_to(c->ctx, 0, m_height);
+    cairo_stroke(c->ctx);
   }
+  // TODO: Draw the text.
+  cairo_text_extents_t ext;
+  cairo_text_extents(c->ctx, state->data, &ext);
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_move_to(c->ctx, x+offset, y+offset+ext.height);
+  cairo_show_text(c->ctx, state->data);
 
-
-  return false;
+  return rv;
 }
 
