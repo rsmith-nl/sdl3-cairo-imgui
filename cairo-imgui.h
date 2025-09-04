@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-09-02T21:42:59+0200
+// Last modified: 2025-09-04T20:12:55+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -43,7 +43,7 @@ typedef struct {
 #define EBUF_SIZE 256
 typedef struct {
   char data[EBUF_SIZE];
-  double width[EBUF_SIZE];
+//  double cum_off[EBUF_SIZE];
   ptrdiff_t used;
   ptrdiff_t cursorpos;
   ptrdiff_t displaypos;

@@ -5,13 +5,13 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-04T19:15:13+0200
+// Last modified: 2025-09-04T20:41:30+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
 #include <stdio.h>
 #include <cairo/cairo.h>
-#include "SDL3/SDL_keycode.h"
+#include <SDL3/SDL.h>
 
 static double m_width, m_height;
 
@@ -464,9 +464,12 @@ bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
         state->data[state->used++] = keycode;
         state->cursorpos++;
       } else if (state->cursorpos < state->used) {  // cursor inside text
-        for (int movecount = state->used - state->cursorpos; movecount > 0; movecount--) {
-          state->data[state->used++] = state->data[state->cursorpos++];
+        for (int m = state->used; m >= state->cursorpos; m--) {
+          state->data[m+1] = state->data[m];
         }
+        state->data[state->cursorpos++] = keycode;
+        state->used++;
+
       }
     } else if (c->keycode == SDLK_END) {
       state->cursorpos = state->used;
@@ -491,10 +494,19 @@ bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
         }
       }
     }
-    // TODO: move the cursor position
+    // fill the cumulative offset array
+    double cum_off = 0.0;
+    for (int j = 0; j < state->cursorpos; j++) {
+      char str[2] = {0};
+       cairo_text_extents_t ext;
+      str[0] = state->data[j];
+      cairo_text_extents(c->ctx, str, &ext);
+      cum_off += ext.x_advance;
+    }
+    // TODO: draw the cursor position
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
-    cairo_move_to(c->ctx, x+offset, y+offset);
+    cairo_move_to(c->ctx, x+offset+cum_off, y+offset);
     cairo_rel_line_to(c->ctx, 0, m_height);
     cairo_stroke(c->ctx);
   }
