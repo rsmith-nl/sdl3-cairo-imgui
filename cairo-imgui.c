@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-02T07:21:33+0200
+// Last modified: 2025-09-04T19:15:13+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -456,11 +456,15 @@ bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
         state->cursorpos++;
       }
     } else if (c->keycode >= 0x20 && c->keycode <= 0x7e) { // insert regular key.
+      char keycode = (char)c->keycode;
+      if (c->mod & (SDL_KMOD_SHIFT|SDL_KMOD_CAPS)) {  // Handle capitals.
+        keycode -= 32;
+      }
       if (state->cursorpos == state->used) {  // cursor at end
-        state->data[state->used++] = (char)c->keycode;
+        state->data[state->used++] = keycode;
         state->cursorpos++;
       } else if (state->cursorpos < state->used) {  // cursor inside text
-        for (int movecount = state->used - state->cursorpos;movecount > 0; movecount--) {
+        for (int movecount = state->used - state->cursorpos; movecount > 0; movecount--) {
           state->data[state->used++] = state->data[state->cursorpos++];
         }
       }
@@ -468,16 +472,33 @@ bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
       state->cursorpos = state->used;
     } else if (c->keycode == SDLK_HOME) {
       state->cursorpos = 0;
+    } else if (c->keycode == SDLK_BACKSPACE) {
+      if (state->cursorpos > 0 && state->cursorpos <= state->used) {
+        for (int move = state->cursorpos-1; move < state->used; move++) {
+          state->data[move] = state->data[move+1];
+        }
+        state->data[state->used--] = 0;
+        state->cursorpos--;
+      }
+    } else if (c->keycode == SDLK_DELETE) {
+      if (state->cursorpos >= 0 && state->cursorpos <= state->used) {
+        for (int move = state->cursorpos; move < state->used; move++) {
+          state->data[move] = state->data[move+1];
+        }
+        state->data[state->used--] = 0;
+        if (state->cursorpos > 0) {
+          state->cursorpos--;
+        }
+      }
     }
-    // TODO: handle deleting a character.
-    // TODO: draw the cursor
+    // TODO: move the cursor position
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_move_to(c->ctx, x+offset, y+offset);
     cairo_rel_line_to(c->ctx, 0, m_height);
     cairo_stroke(c->ctx);
   }
-  // TODO: Draw the text.
+  // TODO: Draw the text, clip if longer than window.
   cairo_text_extents_t ext;
   cairo_text_extents(c->ctx, state->data, &ext);
   cairo_new_path(c->ctx);
