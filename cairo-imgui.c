@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-04T20:41:30+0200
+// Last modified: 2025-09-05T13:07:27+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -407,6 +407,19 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
     cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
     cairo_stroke(c->ctx);
     // TODO: Update the value when clicked within the spinner buttons.
+    // Update the value when up or down arrows are used.
+    switch (c->keycode) {
+      case SDLK_UP:
+        (*state)++;
+        rv = true;
+        break;
+      case SDLK_DOWN:
+        (*state)--;
+        rv = true;
+        break;
+      default:
+        break;
+    }
   }
   // Clamp the state between min and max.
   if (*state > max) {
