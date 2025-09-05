@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-05T13:07:27+0200
+// Last modified: 2025-09-05T14:27:42+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -392,13 +392,28 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   const double boxsize = 12.0;
   double width = maxw + 2 * offset + 2*boxsize;
   double height = m_height + 2 * offset;
-  //cairo_fill(c->ctx);
   // Draw the outline.
   cairo_new_path(c->ctx);
   cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
   cairo_rectangle(c->ctx, x, y, width, height);
   cairo_stroke(c->ctx);
-  // TODO: draw the spinner buttons.
+  // Draw the spinner buttons.
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_move_to(c->ctx, x+offset+maxw, y+offset+m_height);
+  cairo_rel_line_to(c->ctx, boxsize, 0);
+  cairo_rel_line_to(c->ctx, -boxsize/2, -boxsize);
+  cairo_rel_line_to(c->ctx, -boxsize/2, boxsize);
+  cairo_close_path(c->ctx);
+  cairo_fill(c->ctx);
+  cairo_new_path(c->ctx);
+  cairo_set_source_rgb(c->ctx, c->fg.r, c->fg.g, c->fg.b);
+  cairo_move_to(c->ctx, x+offset+maxw+boxsize, y+offset);
+  cairo_rel_line_to(c->ctx, boxsize, 0);
+  cairo_rel_line_to(c->ctx, -boxsize/2, boxsize);
+  cairo_rel_line_to(c->ctx, -boxsize/2, -boxsize);
+  cairo_close_path(c->ctx);
+  cairo_fill(c->ctx);
   if (c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height) {
     // Draw inside accent if mouse is inside.
@@ -407,6 +422,16 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
     cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
     cairo_stroke(c->ctx);
     // TODO: Update the value when clicked within the spinner buttons.
+    if (c->button_pressed) {
+      double xdist =  c->mouse_x - x - offset - maxw;
+      if (xdist < boxsize) {
+        (*state)++;
+        rv = true;
+      } else if (xdist > boxsize) {
+        (*state)--;
+        rv = true;
+      }
+    }
     // Update the value when up or down arrows are used.
     switch (c->keycode) {
       case SDLK_UP:
