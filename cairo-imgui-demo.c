@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2025-09-02T07:21:48+0200
+// Last modified: 2025-09-24T21:29:31+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -34,6 +34,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
   static State s = {0};
   // Create GUI context.
   static GUI_context ctx = {0};
+  ctx.id = 1;
   s.ctx = &ctx;
   // Set a theme for the GUI.
   gui_theme_dark(&ctx);

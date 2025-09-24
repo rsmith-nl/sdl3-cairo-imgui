@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2025-09-04T20:12:55+0200
+// Last modified: 2025-09-24T21:38:26+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -31,6 +31,7 @@ typedef struct {
   cairo_surface_t *surface;
   cairo_t *ctx;
   int32_t mouse_x, mouse_y;
+  int32_t id;
   int32_t keycode;
   int16_t mod;
   bool button_pressed;
