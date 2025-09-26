@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-24T21:38:22+0200
+// Last modified: 2025-09-26T21:29:43+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -109,13 +109,21 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
       if (event->key.key == 'q' || event->key.key == SDLK_ESCAPE) {
         return SDL_APP_SUCCESS;
       } else if (event->key.key == SDLK_TAB) {
-        ctx->id++;
-        if (ctx->id > maxid) {
-          ctx->id = 1;
+        if (event->key.mod & (SDL_KMOD_LSHIFT|SDL_KMOD_RSHIFT)) {
+          ctx->id--;
+          if (ctx->id < 0) {
+            ctx->id = maxid;
+          }
+        } else {
+          ctx->id++;
+          if (ctx->id > maxid) {
+            ctx->id = 1;
+          }
         }
+      } else {
+        ctx->keycode = event->key.key;
+        ctx->mod = event->key.mod;
       }
-      ctx->keycode = event->key.key;
-      ctx->mod = event->key.mod;
       break;
     case SDL_EVENT_MOUSE_MOTION:
       ctx->mouse_x = event->motion.x;
@@ -157,6 +165,7 @@ bool gui_button(GUI_context *c, double x, double y, const char *label)
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+    c->id = id;
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+1, y+1, width-2, height-2);
@@ -211,6 +220,7 @@ bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *s
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+    c->id = id;
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+1, y+1, boxsize-2, boxsize-2);
@@ -304,6 +314,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+    c->id = id;
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cury = y + boxsize/2;
@@ -360,6 +371,7 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *state)
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+    c->id = id;
     // draw inside if mouse is inside.
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
@@ -434,6 +446,7 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   cairo_fill(c->ctx);
   if ((c->mouse_x >= x && (c->mouse_x - x) <= width &&
       c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+    c->id = id;
     // Draw inside accent if mouse is inside.
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
@@ -498,6 +511,7 @@ bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
   cairo_stroke(c->ctx);
   if ((c->mouse_x >= x && (c->mouse_x - x) <= w &&
       c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+    c->id = id;
     // Draw inside accent if mouse is inside.
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
