@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-26T21:29:43+0200
+// Last modified: 2025-09-26T22:36:01+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -15,9 +15,6 @@
 #include <SDL3/SDL.h>
 
 static double m_width, m_height;
-static int32_t counter = 1;
-static int32_t maxid = 0;
-
 
 void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
 {
@@ -46,7 +43,7 @@ void gui_begin(SDL_Renderer *renderer, SDL_Texture *texture, GUI_context *out)
   cairo_text_extents(out->ctx, "M", &ext);
   m_width = ext.width;
   m_height = ext.height;
-  counter = 1;
+  out->counter = 1;
 }
 
 void gui_end(GUI_context *ctx)
@@ -62,7 +59,7 @@ void gui_end(GUI_context *ctx)
   SDL_UnlockTexture(ctx->texture);
   SDL_RenderTexture(ctx->renderer, ctx->texture, 0, 0);
   SDL_RenderPresent(ctx->renderer);
-  maxid = counter;
+  ctx->maxid = ctx->counter;
 }
 
 void gui_theme_light(GUI_context *ctx)
@@ -112,11 +109,11 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
         if (event->key.mod & (SDL_KMOD_LSHIFT|SDL_KMOD_RSHIFT)) {
           ctx->id--;
           if (ctx->id < 0) {
-            ctx->id = maxid;
+            ctx->id = ctx->maxid;
           }
         } else {
           ctx->id++;
-          if (ctx->id > maxid) {
+          if (ctx->id > ctx->maxid) {
             ctx->id = 1;
           }
         }
@@ -150,7 +147,8 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
 bool gui_button(GUI_context *c, double x, double y, const char *label)
 {
   assert(c);
-  int32_t id = counter++;
+  // All interactive widgets should get an ID by increasing the counter.
+  int32_t id = c->counter++;
   double rv = false;
   double offset = 10.0;
   cairo_text_extents_t ext;
@@ -204,7 +202,7 @@ void gui_label(GUI_context *c, double x, double y, const char *label)
 bool gui_checkbox(GUI_context *c, double x, double y, const char *label, bool *state)
 {
   assert(c);
-  int32_t id = counter++;
+  int32_t id = c->counter++;
   double rv = false;
   double offset = 5.0;
   double boxsize = m_width>m_height?m_width:m_height;
@@ -259,7 +257,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   assert(c);
   assert(labels);
   assert(nlabels > 0);
-  int32_t id = counter++;
+  int32_t id = c->counter++;
   double rv = false;
   double offset = 5.0;
   //double boxsize = 14.0;
@@ -356,7 +354,7 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *state)
 {
   assert(c);
   assert(state);
-  int32_t id = counter++;
+  int32_t id = c->counter++;
   bool changed = false;
   const double xsize = 20.0;
   const double ysize = 10.0;
@@ -414,7 +412,7 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
   assert(c);
   assert(state);
   assert(max > min);
-  int32_t id = counter++;
+  int32_t id = c->counter++;
   bool rv = false;
   // Determine the amount of characters needed
   double maxw = ceil(log10(fabs((double)max))) * m_width;
@@ -500,7 +498,7 @@ bool gui_editbox(GUI_context *c, const double x, const double y, const double w,
 {
   assert(c);
   assert(state);
-  int32_t id = counter++;
+  int32_t id = c->counter++;
   const double offset = 6.0;
   double height = m_height + 2 * offset;
   bool rv = false;
