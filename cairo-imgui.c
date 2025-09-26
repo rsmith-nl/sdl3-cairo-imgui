@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-26T22:52:35+0200
+// Last modified: 2025-09-26T23:05:15+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -460,7 +460,6 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cairo_rectangle(c->ctx, x+2, y+2, width-4, height-4);
     cairo_stroke(c->ctx);
-    // TODO: Update the value when clicked within the spinner buttons.
     if (c->button_pressed) {
       double xdist =  c->mouse_x - x - offset - maxw;
       if (xdist < boxsize) {
