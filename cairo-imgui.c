@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-26T22:36:01+0200
+// Last modified: 2025-09-26T22:52:35+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -318,7 +318,7 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
     cury = y + boxsize/2;
     curx = x + boxsize/2;
     for (int k = 0; k < nlabels; k++) {
-      if (fabs((double)c->mouse_y - cury) < exty[k]/2) {
+      if ((fabs((double)c->mouse_y - cury) < exty[k]/2)||*state == k) {
         // This is the label!
         cairo_new_path(c->ctx);
         cairo_arc(c->ctx, curx, cury, boxsize/2 - 3, 0.0, 2*M_PI);
@@ -330,6 +330,16 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
         if (c->button_released || c->keycode == SDLK_RETURN) {
           rv = true;
           *state = k;
+        } else if (c->keycode == SDLK_UP) {
+          *state = --k;
+          if (*state < 0) {
+            *state = nlabels-1;
+          }
+        } else if (c->keycode == SDLK_DOWN) {
+          *state = ++k;
+          if (*state == nlabels) {
+            *state = 0;
+          }
         }
         break;
       };
