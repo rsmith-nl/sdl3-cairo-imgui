@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-26T23:05:15+0200
+// Last modified: 2025-09-28T11:00:08+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <cairo/cairo.h>
 #include <SDL3/SDL.h>
+#include "SDL3/SDL_keycode.h"
 
 static double m_width, m_height;
 
@@ -399,6 +400,12 @@ bool gui_slider(GUI_context *c, const double x, const double y, int *state)
     } else if (c->keycode == SDLK_RIGHT) {
       (*state)++;
       changed = true;
+    } else if (c->keycode == SDLK_HOME) {
+      *state = 0;
+      changed = true;
+    }  else if (c->keycode == SDLK_END) {
+      *state = 255;
+      changed = true;
     }
   }
   // Clamp state within allowed range.
@@ -478,6 +485,14 @@ bool gui_ispinner(GUI_context *c, const double x, const double y,
         break;
       case SDLK_DOWN:
         (*state)--;
+        rv = true;
+        break;
+      case SDLK_HOME:
+        *state = min;
+        rv = true;
+        break;
+      case SDLK_END:
+        *state = max;
         rv = true;
         break;
       default:
