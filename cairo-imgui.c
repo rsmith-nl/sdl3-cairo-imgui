@@ -7,6 +7,7 @@
 // Created: 2025-08-26 14:04:09 +0200
 // Last modified: 2025-09-26T23:05:15+0200
 
+#define _GNU_SOURCE
 #include "cairo-imgui.h"
 #include <math.h>
 #include <stdint.h>
