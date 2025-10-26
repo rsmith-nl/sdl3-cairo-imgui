@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 - **Math constants**: Fixed M_PI undefined error in cairo-imgui.c
   - Added `#define _GNU_SOURCE` before includes to enable math constants on Linux
 
+### Fixed
+- **Theme switching (radio buttons)**: Fixed bug preventing switching from light -> dark
+  - Adjusted radio-button hit-test in `gui_radiobuttons` so the previously selected
+    item doesn't intercept clicks when the mouse is inside the radio-button box.
+  - Result: switching both directions (light→dark and dark→light) now works reliably.
+
 ### Added
 - First successful build on Debian GNU/Linux system
 - Verified executable generation: `cairo-imgui-demo` (33,872 bytes)
