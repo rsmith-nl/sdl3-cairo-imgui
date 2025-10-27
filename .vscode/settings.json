@@ -1,0 +1,40 @@
+{
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c"
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.configureOnOpen": true,
+    "cmake.generator": "MinGW Makefiles",
+    "cmake.environment": {
+        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+    },
+    "cmake.defaultVariants": {
+        "buildType": {
+            "default": "Debug",
+            "choices": {
+                "Debug": {
+                    "short": "Debug",
+                    "long": "Debug build with debug symbols",
+                    "buildType": "Debug"
+                },
+                "Release": {
+                    "short": "Release",
+                    "long": "Optimized release build",
+                    "buildType": "Release"
+                }
+            }
+        }
+    },
+    "cmake.buildTask": true,
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+    },
+    "debug.allowBreakpointsEverywhere": true
+}
