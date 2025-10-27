@@ -133,6 +133,21 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   snprintf(buf, 79, "x = %d, y = %d", s->ctx->mouse_x, s->ctx->mouse_y);
   gui_label(s->ctx, 100, 270, buf);
   // You can still draw to s->ctx here...
+  // Small animated indicator to verify frames are updating.
+  {
+    static int anim = 0;
+    int rw = 0, rh = 0;
+    SDL_GetCurrentRenderOutputSize(s->renderer, &rw, &rh);
+    if (rw <= 0) rw = 400; // fallback
+    // Move a tiny rectangle horizontally across the top.
+    double x = 10.0 + (anim % (rw > 40 ? (rw - 40) : 10));
+    double y = 8.0;
+    cairo_new_path(s->ctx->ctx);
+    cairo_set_source_rgb(s->ctx->ctx, s->ctx->acc.r, s->ctx->acc.g, s->ctx->acc.b);
+    cairo_rectangle(s->ctx->ctx, x, y, 6.0, 6.0);
+    cairo_fill(s->ctx->ctx);
+    anim = (anim + 3) & 0x7fffffff; // keep it bounded
+  }
   // End of GUI definition
   gui_end(s->ctx);
   return SDL_APP_CONTINUE;

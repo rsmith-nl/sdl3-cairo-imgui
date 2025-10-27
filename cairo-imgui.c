@@ -54,6 +54,8 @@ void gui_end(GUI_context *ctx)
   ctx->keycode = 0;
   ctx->mod = 0;
   // Clean up
+  // Ensure all drawing operations are flushed to the surface memory
+  cairo_surface_flush(ctx->surface);
   cairo_destroy(ctx->ctx);
   cairo_surface_destroy(ctx->surface);
   ctx->surface = 0;
