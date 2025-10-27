@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            // https://marketplace.visualstudio.com/items?itemName=tomblind.local-lua-debugger-vscode
+            "name": "demo.lua BUNDLED EXE",
+            "request": "launch",
+            "type": "lua-local",
+            "program": {
+                "lua": "${workspaceFolder}/windows-os/luajit-mwindows.exe",
+                "file": "${workspaceFolder}/demo.lua"
+            },
+            "stopOnEntry": false
+        },
+        {
+            // https://marketplace.visualstudio.com/items?itemName=tomblind.local-lua-debugger-vscode
+            "name": "demo.lua (luajit from PATH)",
+            "request": "launch",
+            "type": "lua-local",
+            "program": {
+                "lua": "luajit",
+                "file": "${workspaceFolder}/demo.lua"
+            },
+            "stopOnEntry": false
+        },
+        {
+            "name": "demo.lua via Wine (app-mconsole.cmd)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "wine app-mconsole.cmd",
+            "cwd": "${workspaceFolder}"
+        }
+    ],
+    "version": "0.2.0"
+}
