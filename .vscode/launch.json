@@ -9,6 +9,7 @@
                 "lua": "${workspaceFolder}/windows-os/luajit-mwindows.exe",
                 "file": "${workspaceFolder}/demo.lua"
             },
+            "env": { "PATH": "${env:PATH};${workspaceFolder}/cairo-ui--exe-distribution" },
             "stopOnEntry": false
         },
         {
