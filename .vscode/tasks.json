@@ -2,21 +2,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "CMake: Configure Debug",
+            "label": "CMake: Configure Linux Debug",
             "type": "shell",
             "command": "cmake",
             "args": [
-                "-B",
-                "build",
-                "-DCMAKE_BUILD_TYPE=Debug",
-                "-G",
-                "MinGW Makefiles"
+                "--preset",
+                "linux-debug"
             ],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
-                }
-            },
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -25,18 +17,33 @@
                 "panel": "shared"
             },
             "problemMatcher": [],
-            "detail": "Configure CMake for debug build"
+            "detail": "Configure CMake for Linux debug build using Ninja"
         },
         {
-            "label": "CMake: Configure Release",
+            "label": "CMake: Configure Linux Release",
             "type": "shell",
             "command": "cmake",
             "args": [
-                "-B",
-                "build",
-                "-DCMAKE_BUILD_TYPE=Release",
-                "-G",
-                "MinGW Makefiles"
+                "--preset",
+                "linux-release"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Configure CMake for Linux release build using Ninja"
+        },
+        {
+            "label": "CMake: Configure Windows Debug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--preset",
+                "windows-debug"
             ],
             "options": {
                 "env": {
@@ -51,7 +58,30 @@
                 "panel": "shared"
             },
             "problemMatcher": [],
-            "detail": "Configure CMake for release build"
+            "detail": "Configure CMake for Windows debug build using Ninja"
+        },
+        {
+            "label": "CMake: Configure Windows Release",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--preset",
+                "windows-release"
+            ],
+            "options": {
+                "env": {
+                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Configure CMake for Windows release build using Ninja"
         },
         {
             "label": "CMake: Build Debug",
@@ -59,13 +89,14 @@
             "command": "cmake",
             "args": [
                 "--build",
-                "build",
-                "--config",
-                "Debug"
+                "--preset",
+                "${input:debugPreset}"
             ],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
                 }
             },
             "group": {
@@ -81,18 +112,60 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "dependsOn": "CMake: Configure Debug",
-            "detail": "Build the project in debug mode"
+            "detail": "Build using debug preset"
         },
         {
-            "label": "CMake: Build Release",
+            "label": "CMake: Build Linux Debug",
             "type": "shell",
             "command": "cmake",
             "args": [
                 "--build",
-                "build",
-                "--config",
-                "Release"
+                "--preset",
+                "linux-debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn": "CMake: Configure Linux Debug",
+            "detail": "Build the project in Linux debug mode"
+        },
+        {
+            "label": "CMake: Build Linux Release",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "linux-release"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn": "CMake: Configure Linux Release",
+            "detail": "Build the project in Linux release mode"
+        },
+        {
+            "label": "CMake: Build Windows Debug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "windows-debug"
             ],
             "options": {
                 "env": {
@@ -109,18 +182,17 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "dependsOn": "CMake: Configure Release",
-            "detail": "Build the project in release mode"
+            "dependsOn": "CMake: Configure Windows Debug",
+            "detail": "Build the project in Windows debug mode"
         },
         {
-            "label": "CMake: Clean",
+            "label": "CMake: Build Windows Release",
             "type": "shell",
             "command": "cmake",
             "args": [
                 "--build",
-                "build",
-                "--target",
-                "clean"
+                "--preset",
+                "windows-release"
             ],
             "options": {
                 "env": {
@@ -134,22 +206,55 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": [],
-            "detail": "Clean build artifacts"
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn": "CMake: Configure Windows Release",
+            "detail": "Build the project in Windows release mode"
         },
         {
-            "label": "CMake: Run",
+            "label": "CMake: Clean",
             "type": "shell",
             "command": "cmake",
             "args": [
                 "--build",
-                "build",
+                "out/build/${input:buildType}-${input:platform}",
+                "--target",
+                "clean"
+            ],
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Clean build artifacts"
+        },
+        {
+            "label": "CMake: Run Demo",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "${input:buildPreset}",
                 "--target",
                 "run"
             ],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
                 }
             },
             "group": "test",
@@ -160,8 +265,35 @@
                 "panel": "shared"
             },
             "problemMatcher": [],
-            "dependsOn": "CMake: Build Debug",
-            "detail": "Build and run the application"
+            "detail": "Build and run the demo application"
+        },
+        {
+            "label": "CMake: Test Assets",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset",
+                "${input:buildPreset}",
+                "--target",
+                "test-assets"
+            ],
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Build and run asset path test"
         },
         {
             "label": "CMake: Format Code",
@@ -169,13 +301,16 @@
             "command": "cmake",
             "args": [
                 "--build",
-                "build",
+                "--preset",
+                "${input:buildPreset}",
                 "--target",
                 "style"
             ],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
                 }
             },
             "group": "build",
@@ -194,13 +329,16 @@
             "command": "cmake",
             "args": [
                 "--build",
-                "build",
+                "--preset",
+                "${input:buildPreset}",
                 "--target",
                 "tidy"
             ],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
                 }
             },
             "group": "build",
@@ -211,17 +349,19 @@
                 "panel": "shared"
             },
             "problemMatcher": [],
-            "dependsOn": "CMake: Build Debug",
             "detail": "Run clang-tidy static analysis"
         },
         {
             "label": "Make: Build (Original)",
             "type": "shell",
-            "command": "mingw32-make",
+            "command": "make",
             "args": [],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+            "windows": {
+                "command": "mingw32-make",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
                 }
             },
             "group": "build",
@@ -239,13 +379,16 @@
         {
             "label": "Make: Clean",
             "type": "shell",
-            "command": "mingw32-make",
+            "command": "make",
             "args": [
                 "clean"
             ],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+            "windows": {
+                "command": "mingw32-make",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                    }
                 }
             },
             "group": "build",
@@ -259,9 +402,25 @@
             "detail": "Clean using original Makefile"
         },
         {
-            "label": "Run Application (CMake)",
+            "label": "Run Application (CMake Linux)",
             "type": "shell",
-            "command": "${workspaceFolder}\\build\\bin\\cairo-imgui-demo.exe",
+            "command": "${workspaceFolder}/out/build/linux-debug/bin/cairo-imgui-demo",
+            "args": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "dependsOn": "CMake: Build Linux Debug",
+            "detail": "Run the CMake-built Linux application"
+        },
+        {
+            "label": "Run Application (CMake Windows)",
+            "type": "shell",
+            "command": "${workspaceFolder}\\out\\build\\windows-debug\\bin\\cairo-imgui-demo.exe",
             "args": [],
             "options": {
                 "env": {
@@ -276,17 +435,20 @@
                 "panel": "shared"
             },
             "problemMatcher": [],
-            "dependsOn": "CMake: Build Debug",
-            "detail": "Run the CMake-built application"
+            "dependsOn": "CMake: Build Windows Debug",
+            "detail": "Run the CMake-built Windows application"
         },
         {
             "label": "Run Application (Makefile)",
             "type": "shell",
-            "command": "${workspaceFolder}\\cairo-imgui-demo.exe",
+            "command": "${workspaceFolder}/cairo-imgui-demo",
             "args": [],
-            "options": {
-                "env": {
-                    "PATH": "C:\\msys64\\mingw64\\bin;${workspaceFolder}\\cairo-ui--exe-distribution;${env:PATH}"
+            "windows": {
+                "command": "${workspaceFolder}\\cairo-imgui-demo.exe",
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\mingw64\\bin;${workspaceFolder}\\cairo-ui--exe-distribution;${env:PATH}"
+                    }
                 }
             },
             "group": "test",
@@ -299,6 +461,50 @@
             "problemMatcher": [],
             "dependsOn": "Make: Build (Original)",
             "detail": "Run the Makefile-built application"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "buildPreset",
+            "type": "pickString",
+            "description": "Select build preset",
+            "options": [
+                "linux-debug",
+                "linux-release",
+                "windows-debug",
+                "windows-release"
+            ],
+            "default": "linux-debug"
+        },
+        {
+            "id": "debugPreset",
+            "type": "pickString",
+            "description": "Select debug preset",
+            "options": [
+                "linux-debug",
+                "windows-debug"
+            ],
+            "default": "linux-debug"
+        },
+        {
+            "id": "buildType",
+            "type": "pickString",
+            "description": "Select build type",
+            "options": [
+                "debug",
+                "release"
+            ],
+            "default": "debug"
+        },
+        {
+            "id": "platform",
+            "type": "pickString",
+            "description": "Select platform",
+            "options": [
+                "linux",
+                "windows"
+            ],
+            "default": "linux"
         }
     ]
 }
