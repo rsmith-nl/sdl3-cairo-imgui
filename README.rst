@@ -53,41 +53,69 @@ Requirements
 Building with CMake
 ===================
 
-This project provides a cross‑platform CMake build that works on Debian 12 GNU/Linux and on MSYS2/MinGW (Windows 11).
+This project provides a cross‑platform CMake build using **Ninja** that works on Debian 12 GNU/Linux and MSYS2/MinGW (Windows 11).
+
+**Recommended**: Use the included CMake presets for consistent builds across platforms.
 
 Linux (Debian 12)
 -----------------
 
 Install dependencies::
 
-  sudo apt install cmake build-essential libsdl3-dev libcairo2-dev pkg-config
+  sudo apt install cmake build-essential ninja-build libsdl3-dev libcairo2-dev pkg-config
 
-Configure and build::
+Configure and build using presets::
 
-  cmake -S . -B build
-  cmake --build build -j
+  cmake --preset linux-debug
+  cmake --build --preset linux-debug
+
+Or for release builds::
+
+  cmake --preset linux-release
+  cmake --build --preset linux-release
 
 Run the demo::
 
-  ./build/bin/cairo-imgui-demo
+  ./out/build/linux-debug/bin/cairo-imgui-demo
 
 Windows 11 (MSYS2/MinGW)
 ------------------------
 
-Use the MSYS2 UCRT64 (or MINGW64) shell and install packages::
+Use the MSYS2 **MINGW64** shell and install packages::
 
-  pacman -S --needed mingw-w64-ucrt-x86_64-cmake \
-                   mingw-w64-ucrt-x86_64-toolchain \
-                   mingw-w64-ucrt-x86_64-SDL3 \
-                   mingw-w64-ucrt-x86_64-cairo \
+  pacman -S --needed mingw-w64-x86_64-cmake \
+                   mingw-w64-x86_64-toolchain \
+                   mingw-w64-x86_64-ninja \
+                   mingw-w64-x86_64-SDL3 \
+                   mingw-w64-x86_64-cairo \
                    pkgconf
 
-Configure and build (in the same shell)::
+Configure and build using presets (in the same shell)::
 
-  cmake -S . -B build
+  cmake --preset windows-debug
+  cmake --build --preset windows-debug
+
+Or for release builds::
+
+  cmake --preset windows-release
+  cmake --build --preset windows-release
+
+Run the demo::
+
+  ./out/build/windows-debug/bin/cairo-imgui-demo.exe
+
+Alternative: Manual CMake invocation
+-------------------------------------
+
+If you prefer not to use presets, you can invoke CMake manually::
+
+  # Linux
+  cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug
   cmake --build build -j
 
-The demo binary will be at ``build/bin/cairo-imgui-demo.exe``.
+  # Windows (MSYS2 MINGW64 shell)
+  cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug -DWINDOWS_GUI_SUBSYSTEM=ON
+  cmake --build build -j
 
 Notes
 -----

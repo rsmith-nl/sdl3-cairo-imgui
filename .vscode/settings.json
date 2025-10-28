@@ -7,14 +7,15 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
     "C_Cpp.default.cStandard": "c11",
-    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Ninja",
+    "cmake.useCMakePresets": "always",
+    "cmake.buildDirectory": "${workspaceFolder}/out/build/${buildType}-${hostSystemName}",
     "cmake.configureOnOpen": true,
     "cmake.buildTask": true,
     "debug.allowBreakpointsEverywhere": true,
-    // Platform-specific settings
+    // Platform-specific compiler paths and environment
     "[windows]": {
         "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
-        "cmake.generator": "MinGW Makefiles",
         "cmake.environment": {
             "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
         },
@@ -24,8 +25,7 @@
         }
     },
     "[linux]": {
-        "C_Cpp.default.compilerPath": "/usr/bin/gcc",
-        "cmake.generator": "Unix Makefiles"
+        "C_Cpp.default.compilerPath": "/usr/bin/gcc"
     },
     "cmake.defaultVariants": {
         "buildType": {
