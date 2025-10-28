@@ -21,7 +21,7 @@
             "program": "${workspaceFolder}/out/build/linux-debug/bin/cairo-imgui-demo",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/out/build/linux-debug/bin",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -47,7 +47,7 @@
             "program": "${workspaceFolder}/out/build/windows-debug/bin/cairo-imgui-demo.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/out/build/windows-debug/bin",
+            "cwd": "${workspaceFolder}",
             "environment": [
                 {
                     "name": "PATH",
@@ -78,7 +78,7 @@
             "program": "${workspaceFolder}/out/build/windows-debug/bin/cairo-imgui-demo.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/out/build/windows-debug/bin",
+            "cwd": "${workspaceFolder}",
             "environment": [
                 {
                     "name": "PATH",
@@ -95,7 +95,7 @@
             "program": "${workspaceFolder}/out/build/windows-debug/bin/cairo-imgui-demo.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/out/build/windows-debug/bin",
+            "cwd": "${workspaceFolder}",
             "environment": [
                 {
                     "name": "PATH",

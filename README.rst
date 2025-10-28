@@ -74,9 +74,13 @@ Or for release builds::
   cmake --preset linux-release
   cmake --build --preset linux-release
 
-Run the demo::
+Run the demo (from project root for asset paths)::
 
   ./out/build/linux-debug/bin/cairo-imgui-demo
+
+Or using the custom target::
+
+  cmake --build --preset linux-debug --target run
 
 Windows 11 (MSYS2/MinGW)
 ------------------------
@@ -100,9 +104,13 @@ Or for release builds::
   cmake --preset windows-release
   cmake --build --preset windows-release
 
-Run the demo::
+Run the demo (from project root for asset paths)::
 
   ./out/build/windows-debug/bin/cairo-imgui-demo.exe
+
+Or using the custom target::
+
+  cmake --build --preset windows-debug --target run
 
 Alternative: Manual CMake invocation
 -------------------------------------
@@ -120,6 +128,7 @@ If you prefer not to use presets, you can invoke CMake manually::
 Notes
 -----
 
+* **Asset paths**: Always run the demo from the project root directory. The build outputs to ``out/build/{preset}/bin/`` but relative asset paths (like ``assets/image.bmp``) are resolved from the working directory. Both the CMake ``run`` target and VS Code debug configurations automatically set the working directory to the project root for uniform path behavior across debug and release builds.
 * CMake tries to locate SDL3 and Cairo via their official CMake packages when available, and falls back to ``pkg-config`` otherwise. This works out-of-the-box on both Debian and MSYS2.
 * To build the engine as a static library without the demo, configure with ``-DBUILD_DEMO=OFF``.
 * On Windows you can request a GUI‑subsystem demo (no console window) with ``-DWINDOWS_GUI_SUBSYSTEM=ON``.

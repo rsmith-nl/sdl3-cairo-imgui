@@ -115,8 +115,8 @@ if(BUILD_DEMO)
     run
     COMMAND ${CMAKE_BINARY_DIR}/bin/cairo-imgui-demo
     DEPENDS cairo-imgui-demo
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    COMMENT "Running cairo-imgui-demo")
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Running cairo-imgui-demo from project root (for asset paths)")
 endif()
 
 # Style formatting with astyle (if available)
