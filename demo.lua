@@ -9,6 +9,7 @@
 local ffi = require("ffi")
 local sdl_module = require("ffi_sdl3")
 local gui = require("cairo_imgui")
+local app_loop = require("gui_app_loop")
 
 local sdl = sdl_module.sdl
 
@@ -273,88 +274,32 @@ local function main()
         io.stdout:flush()
     end
 
-    if not app_init() then
-        return sdl_module.SDL_APP_FAILURE
+    local iterate_closure = app_iterate()
+
+    local rc = app_loop.run_loop{
+        init = app_init,
+        iterate = function()
+            return iterate_closure()
+        end,
+        on_event = app_event,
+        quit = app_quit,
+        options = {
+            target_fps = TARGET_FPS,
+            run_seconds = RUN_SECONDS,
+            log_frames = LOG_FRAMES,
+            set_callback_rate = "10",
+            startup_delay_ms = 100,
+            startup_drain_cap = 5000,
+            per_frame_event_cap = 200,
+            yield_on_storm = true,
+        }
+    }
+    if rc == sdl_module.SDL_APP_FAILURE then
+        return rc
     end
-
-    -- Create iteration closure
-    local iterate = app_iterate()
-
-    -- Small delay to let window manager settle (prevents spurious early QUIT/events floods)
-    sdl.SDL_Delay(100)
-
-    -- Drain any initialization events (with cap to avoid starvation on event storms)
-    local event_init = ffi.new("SDL_Event")
-    do
-        local drained = 0
-        while sdl.SDL_PollEvent(event_init) do
-            drained = drained + 1
-            if drained >= 5000 then break end
-        end
-        if os.getenv("IMGUI_DEBUG_EVENTS") == "1" then
-            io.stderr:write(string.format("[init] Drained %d startup events\n", drained))
-            io.stderr:flush()
-        end
-    end
-
-    -- Main event/render loop (pacing by TARGET_FPS)
-    local event = ffi.new("SDL_Event")
-    local target_frames = nil
-    if RUN_SECONDS and RUN_SECONDS > 0 then
-        target_frames = RUN_SECONDS * TARGET_FPS
-    end
-
-    io.stderr:write(string.format("[main] Starting event loop, target_frames=%s\n", tostring(target_frames)))
-    io.stderr:flush()
-
-    while state.running do
-        -- Process pending events with a per-frame cap to avoid starvation during event floods
-        do
-            local processed = 0
-            while sdl.SDL_PollEvent(event) do
-                local result = app_event(event)
-                if result == sdl_module.SDL_APP_SUCCESS or result == sdl_module.SDL_APP_FAILURE then
-                    state.running = false
-                    break
-                end
-                processed = processed + 1
-                if processed >= 200 then
-                    break
-                end
-            end
-            if processed >= 200 then
-                -- Give the renderer a chance if there's an event storm
-                sdl.SDL_Delay(1)
-            end
-        end
-
-        if not state.running then break end
-
-        -- Render a frame
-        local result = iterate()
-        if result == sdl_module.SDL_APP_SUCCESS or result == sdl_module.SDL_APP_FAILURE then
-            state.running = false
-            break
-        end
-
-        -- Check auto-exit after rendering frame (only if configured)
-        if target_frames and (state.frame_count or 0) >= target_frames then
-            print(string.format("[auto-exit] Reached %d frames", state.frame_count))
-            io.stdout:flush()
-            state.running = false
-            break
-        end
-
-        -- Frame pacing
-        if FRAME_DELAY_MS > 0 then
-            sdl.SDL_Delay(FRAME_DELAY_MS)
-        end
-    end
-
-    app_quit()
     print(string.format("[exit] Completed with %d frames rendered", state.frame_count or 0))
     io.stdout:flush()
-    return sdl_module.SDL_APP_SUCCESS
+    return rc
 end
 
 -- Run the application
