@@ -109,6 +109,18 @@ if(BUILD_DEMO)
   install(TARGETS ${_DEMO_NAME} RUNTIME DESTINATION bin)
 endif()
 
+# Asset path test executable
+option(BUILD_ASSET_TEST "Build the asset path test executable" ON)
+if(BUILD_ASSET_TEST)
+  add_executable(test-asset-path test-asset-path.c)
+  target_link_libraries(test-asset-path PRIVATE ${SDL3_TARGET} ${CAIRO_TARGET})
+  if(NOT WIN32)
+    target_link_libraries(test-asset-path PRIVATE m)
+  endif()
+  set_target_properties(test-asset-path PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                                    ${CMAKE_BINARY_DIR}/bin)
+endif()
+
 # Custom targets for development
 if(BUILD_DEMO)
   add_custom_target(
@@ -117,6 +129,15 @@ if(BUILD_DEMO)
     DEPENDS cairo-imgui-demo
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running cairo-imgui-demo from project root (for asset paths)")
+endif()
+
+if(BUILD_ASSET_TEST)
+  add_custom_target(
+    test-assets
+    COMMAND ${CMAKE_BINARY_DIR}/bin/test-asset-path
+    DEPENDS test-asset-path
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Running asset path test from project root")
 endif()
 
 # Style formatting with astyle (if available)

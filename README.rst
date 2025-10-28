@@ -129,6 +129,7 @@ Notes
 -----
 
 * **Asset paths**: Always run the demo from the project root directory. The build outputs to ``out/build/{preset}/bin/`` but relative asset paths (like ``assets/image.bmp``) are resolved from the working directory. Both the CMake ``run`` target and VS Code debug configurations automatically set the working directory to the project root for uniform path behavior across debug and release builds.
+* **Testing asset paths**: To verify that asset loading works correctly, build and run the test program: ``cmake --build --preset linux-debug --target test-assets`` (or ``windows-debug`` on Windows). This test loads an image from ``assets/test-image.png`` and displays it, confirming the working directory is properly set.
 * CMake tries to locate SDL3 and Cairo via their official CMake packages when available, and falls back to ``pkg-config`` otherwise. This works out-of-the-box on both Debian and MSYS2.
 * To build the engine as a static library without the demo, configure with ``-DBUILD_DEMO=OFF``.
 * On Windows you can request a GUI‑subsystem demo (no console window) with ``-DWINDOWS_GUI_SUBSYSTEM=ON``.
