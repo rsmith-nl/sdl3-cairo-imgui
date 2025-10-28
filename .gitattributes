@@ -1,0 +1,51 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code
+*.c text
+*.h text
+*.lua text
+
+# Scripts
+*.sh text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Documentation
+*.md text
+*.rst text
+*.txt text
+
+# VS Code configuration
+.vscode/* text
+
+# CMake
+CMakeLists.txt text
+*.cmake text
+
+# Build system
+Makefile text
+*.mk text
+
+# Git
+.gitattributes text
+.gitignore text
+
+# Archives (binary)
+*.zip binary
+*.tar binary
+*.gz binary
+
+# Executables (binary)
+*.exe binary
+*.dll binary
+*.so binary
+*.a binary
+*.o binary
+
+# Images (binary)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

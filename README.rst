@@ -50,6 +50,52 @@ Requirements
 * SDL3 library.
 * Cairo graphics library.
 
+Building with CMake
+===================
+
+This project provides a cross‑platform CMake build that works on Debian 12 GNU/Linux and on MSYS2/MinGW (Windows 11).
+
+Linux (Debian 12)
+-----------------
+
+Install dependencies::
+
+  sudo apt install cmake build-essential libsdl3-dev libcairo2-dev pkg-config
+
+Configure and build::
+
+  cmake -S . -B build
+  cmake --build build -j
+
+Run the demo::
+
+  ./build/bin/cairo-imgui-demo
+
+Windows 11 (MSYS2/MinGW)
+------------------------
+
+Use the MSYS2 UCRT64 (or MINGW64) shell and install packages::
+
+  pacman -S --needed mingw-w64-ucrt-x86_64-cmake \
+                   mingw-w64-ucrt-x86_64-toolchain \
+                   mingw-w64-ucrt-x86_64-SDL3 \
+                   mingw-w64-ucrt-x86_64-cairo \
+                   pkgconf
+
+Configure and build (in the same shell)::
+
+  cmake -S . -B build
+  cmake --build build -j
+
+The demo binary will be at ``build/bin/cairo-imgui-demo.exe``.
+
+Notes
+-----
+
+* CMake tries to locate SDL3 and Cairo via their official CMake packages when available, and falls back to ``pkg-config`` otherwise. This works out-of-the-box on both Debian and MSYS2.
+* To build the engine as a static library without the demo, configure with ``-DBUILD_DEMO=OFF``.
+* On Windows you can request a GUI‑subsystem demo (no console window) with ``-DWINDOWS_GUI_SUBSYSTEM=ON``.
+
 
 Building the demo
 =================

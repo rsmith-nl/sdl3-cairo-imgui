@@ -1,2 +1,45 @@
 cairo-imgui-demo
 /build/
+/build-linux/
+
+# Generic build dirs
+/build-*/
+/cmake-build-*/
+/out/
+
+# In-source CMake artifacts (prefer out-of-source builds)
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/install_manifest.txt
+
+# Object and library files
+*.o
+*.obj
+*.lo
+*.a
+*.la
+*.lib
+
+# Shared libraries (do not affect already tracked files)
+*.so
+*.so.*
+*.dylib
+
+# Build output bins
+/bin/
+/build*/bin/
+/build*/**/*.exe
+/build*/**/*.dll
+/build*/**/*.so
+/build*/**/*.dylib
+
+# Lua bytecode
+*.luac
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo

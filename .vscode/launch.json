@@ -15,7 +15,33 @@
             "stopOnEntry": false
         },
         {
-            "name": "Debug C Application (CMake)",
+            "name": "Debug C Application (CMake) - Linux",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/cairo-imgui-demo",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/bin",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: Build Debug"
+        },
+        {
+            "name": "Debug C Application (CMake) - Windows",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/cairo-imgui-demo.exe",

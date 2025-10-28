@@ -1,6 +1,28 @@
 {
     "configurations": [
         {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/include/**",
+                "/usr/local/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "SDL_MAIN_USE_CALLBACKS"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic"
+            ]
+        },
+        {
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",

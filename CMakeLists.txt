@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 # Project configuration
 project(
-  cairo-imgui-demo
+  cairo-imgui
   VERSION 1.0.0
   LANGUAGES C)
 
@@ -43,53 +43,81 @@ elseif(MSVC)
   set(CMAKE_C_FLAGS_RELEASE "/O2 /DNDEBUG")
 endif()
 
-# Find required packages
-find_package(PkgConfig REQUIRED)
+# Options
+option(BUILD_DEMO "Build the demo executable" ON)
+option(WINDOWS_GUI_SUBSYSTEM
+       "Build demo as a GUI subsystem app on Windows (no console)" OFF)
 
-# Find SDL3
-pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
-if(NOT SDL3_FOUND)
-  message(
-    FATAL_ERROR "SDL3 not found. Please install SDL3 development libraries.")
+# Dependency discovery
+include(CheckSymbolExists)
+
+# First try official CMake packages (when available)
+set(SDL3_TARGET "")
+find_package(SDL3 QUIET CONFIG)
+if(SDL3_FOUND AND TARGET SDL3::SDL3)
+  set(SDL3_TARGET SDL3::SDL3)
+  message(STATUS "Found SDL3 via CMake package: using SDL3::SDL3")
 endif()
 
-# Find Cairo
-pkg_check_modules(CAIRO REQUIRED IMPORTED_TARGET cairo)
-if(NOT CAIRO_FOUND)
-  message(
-    FATAL_ERROR "Cairo not found. Please install Cairo development libraries.")
+# Cairo is usually found via pkg-config, but try CMake config first
+set(CAIRO_TARGET "")
+find_package(Cairo QUIET)
+if(TARGET Cairo::Cairo)
+  set(CAIRO_TARGET Cairo::Cairo)
+  message(STATUS "Found Cairo via CMake package: using Cairo::Cairo")
 endif()
 
-# Source files
-set(SOURCES cairo-imgui-demo.c cairo-imgui.c)
+# Fallback to pkg-config for anything missing
+if(NOT SDL3_TARGET OR NOT CAIRO_TARGET)
+  find_package(PkgConfig REQUIRED)
+  if(NOT SDL3_TARGET)
+    pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
+    set(SDL3_TARGET PkgConfig::SDL3)
+    message(STATUS "Found SDL3 via pkg-config: using PkgConfig::SDL3")
+  endif()
+  if(NOT CAIRO_TARGET)
+    pkg_check_modules(CAIRO REQUIRED IMPORTED_TARGET cairo)
+    set(CAIRO_TARGET PkgConfig::CAIRO)
+    message(STATUS "Found Cairo via pkg-config: using PkgConfig::CAIRO")
+  endif()
+endif()
 
-set(HEADERS cairo-imgui.h)
+# Library target (engine)
+add_library(cairo_imgui STATIC cairo-imgui.c)
+target_include_directories(cairo_imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(cairo_imgui PUBLIC ${SDL3_TARGET} ${CAIRO_TARGET})
+set_target_properties(cairo_imgui PROPERTIES OUTPUT_NAME cairo-imgui)
 
-# Create executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+# Only link libm on non-Windows systems
+if(NOT WIN32)
+  target_link_libraries(cairo_imgui PUBLIC m)
+endif()
 
-# Link libraries
-target_link_libraries(
-  ${PROJECT_NAME} PRIVATE PkgConfig::SDL3 PkgConfig::CAIRO m # math library
-)
-
-# Include directories
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Set output directory
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+# Demo executable
+if(BUILD_DEMO)
+  set(_DEMO_SOURCES cairo-imgui-demo.c)
+  set(_DEMO_NAME cairo-imgui-demo)
+  if(WIN32 AND WINDOWS_GUI_SUBSYSTEM)
+    add_executable(${_DEMO_NAME} WIN32 ${_DEMO_SOURCES})
+  else()
+    add_executable(${_DEMO_NAME} ${_DEMO_SOURCES})
+  endif()
+  target_link_libraries(${_DEMO_NAME} PRIVATE cairo_imgui)
+  target_include_directories(${_DEMO_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+  set_target_properties(${_DEMO_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
                                                  ${CMAKE_BINARY_DIR}/bin)
-
-# Install rules
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+  install(TARGETS ${_DEMO_NAME} RUNTIME DESTINATION bin)
+endif()
 
 # Custom targets for development
-add_custom_target(
-  run
-  COMMAND ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}
-  DEPENDS ${PROJECT_NAME}
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-  COMMENT "Running ${PROJECT_NAME}")
+if(BUILD_DEMO)
+  add_custom_target(
+    run
+    COMMAND ${CMAKE_BINARY_DIR}/bin/cairo-imgui-demo
+    DEPENDS cairo-imgui-demo
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    COMMENT "Running cairo-imgui-demo")
+endif()
 
 # Style formatting with astyle (if available)
 find_program(ASTYLE_EXECUTABLE astyle)
@@ -116,6 +144,8 @@ endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "C flags: ${CMAKE_C_FLAGS}")
+message(STATUS "Using SDL3 target: ${SDL3_TARGET}")
+message(STATUS "Using Cairo target: ${CAIRO_TARGET}")
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "Debug C flags: ${CMAKE_C_FLAGS_DEBUG}")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
