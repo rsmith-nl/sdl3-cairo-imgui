@@ -16,6 +16,12 @@
     // Platform-specific compiler paths and environment
     "[windows]": {
         "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+        "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe",
+        "cmake.configureSettings": {
+            "CMAKE_MAKE_PROGRAM": "C:/msys64/mingw64/bin/ninja.exe",
+            "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+            "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe"
+        },
         "cmake.environment": {
             "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
         },
