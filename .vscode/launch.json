@@ -18,10 +18,10 @@
             "name": "Debug C Application (CMake) - Linux",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/cairo-imgui-demo",
+            "program": "${workspaceFolder}/out/build/linux-debug/bin/cairo-imgui-demo",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/bin",
+            "cwd": "${workspaceFolder}/out/build/linux-debug/bin",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -44,10 +44,10 @@
             "name": "Debug C Application (CMake) - Windows",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/cairo-imgui-demo.exe",
+            "program": "${workspaceFolder}/out/build/windows-debug/bin/cairo-imgui-demo.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/bin",
+            "cwd": "${workspaceFolder}/out/build/windows-debug/bin",
             "environment": [
                 {
                     "name": "PATH",
@@ -75,10 +75,10 @@
             "name": "Debug C Application (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/cairo-imgui-demo.exe",
+            "program": "${workspaceFolder}/out/build/windows-debug/bin/cairo-imgui-demo.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/bin",
+            "cwd": "${workspaceFolder}/out/build/windows-debug/bin",
             "environment": [
                 {
                     "name": "PATH",
@@ -92,10 +92,10 @@
             "name": "Quick Debug (CMake - No Build)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/cairo-imgui-demo.exe",
+            "program": "${workspaceFolder}/out/build/windows-debug/bin/cairo-imgui-demo.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/bin",
+            "cwd": "${workspaceFolder}/out/build/windows-debug/bin",
             "environment": [
                 {
                     "name": "PATH",
