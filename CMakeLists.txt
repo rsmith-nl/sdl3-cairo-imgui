@@ -118,7 +118,7 @@ if(BUILD_ASSET_TEST)
     target_link_libraries(test-asset-path PRIVATE m)
   endif()
   set_target_properties(test-asset-path PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                                    ${CMAKE_BINARY_DIR}/bin)
+                                                   ${CMAKE_BINARY_DIR}/bin)
 endif()
 
 # Custom targets for development
@@ -138,6 +138,32 @@ if(BUILD_ASSET_TEST)
     DEPENDS test-asset-path
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running asset path test from project root")
+endif()
+
+# Test application
+option(BUILD_TEST "Build cairo-imgui test application" ON)
+if(BUILD_TEST)
+  set(_TEST_SOURCES cairo-imguitest.c)
+  set(_TEST_NAME cairo-imguitest)
+  add_executable(${_TEST_NAME} ${_TEST_SOURCES})
+  target_link_libraries(${_TEST_NAME} PRIVATE cairo_imgui)
+  target_link_libraries(${_TEST_NAME} PRIVATE ${SDL3_TARGET})
+  target_link_libraries(${_TEST_NAME} PRIVATE ${CAIRO_TARGET})
+  if(MINGW)
+    target_link_options(${_TEST_NAME} PRIVATE -mwindows)
+  endif()
+  set_target_properties(${_TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                                 ${CMAKE_BINARY_DIR}/bin)
+  install(TARGETS ${_TEST_NAME} RUNTIME DESTINATION bin)
+endif()
+
+if(BUILD_TEST)
+  add_custom_target(
+    test
+    COMMAND ${CMAKE_BINARY_DIR}/bin/cairo-imguitest
+    DEPENDS cairo-imguitest
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Running cairo-imgui test from project root")
 endif()
 
 # Style formatting with astyle (if available)

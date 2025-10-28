@@ -65,9 +65,17 @@ Two debug configurations are available:
 
 ## Build Outputs
 
-- **Debug builds**: `build/bin/cairo-imgui-demo.exe` (with debug symbols)
-- **Release builds**: `build/bin/cairo-imgui-demo.exe` (optimized)
-- **Build files**: `build/` directory (CMake cache, makefiles, etc.)
+Build outputs are placed in `${CMAKE_BINARY_DIR}/bin/`:
+- When using CMakePresets.json: `out/build/<preset-name>/bin/`
+- When using tasks.json: `build/bin/`
+
+Executables built:
+- **cairo-imgui-demo.exe**: Main demonstration application
+- **cairo-imguitest.exe**: Test application for widget testing
+- **test-asset-path.exe**: Asset path verification utility
+
+Build artifacts:
+- **Build files**: CMake cache, makefiles, and object files in build directory
 
 ## Additional Features
 
@@ -85,20 +93,28 @@ Runs `clang-tidy` for static code analysis.
 
 ### Running the Application
 ```bash
+# Run the demo
 cmake --build build --target run
+
+# Run the test application
+cmake --build build --target test
 ```
-Builds and runs the application in one command.
+Builds and runs the applications in one command.
 
 ## Project Structure
 
 ```
 ├── CMakeLists.txt          # Main CMake configuration
-├── cairo-imgui-demo.c      # Main application source
+├── cairo-imgui-demo.c      # Main demonstration application
+├── cairo-imguitest.c       # Test application
+├── test-asset-path.c       # Asset path test utility
 ├── cairo-imgui.c           # GUI implementation
 ├── cairo-imgui.h           # GUI header
-├── build/                  # Build directory (generated)
+├── build/                  # Build directory (tasks.json)
 │   ├── bin/               # Executable output
 │   └── ...               # CMake build files
+├── out/build/             # Build directory (CMakePresets.json)
+│   └── <preset-name>/bin/ # Executable output per preset
 ├── .vscode/               # VS Code configuration
 │   ├── launch.json        # Debug configurations
 │   ├── tasks.json         # Build tasks
