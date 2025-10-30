@@ -50,6 +50,90 @@ Requirements
 * SDL3 library.
 * Cairo graphics library.
 
+Building with CMake
+===================
+
+This project provides a cross‑platform CMake build using **Ninja** that works on Debian 12 GNU/Linux and MSYS2/MinGW (Windows 11).
+
+**Recommended**: Use the included CMake presets for consistent builds across platforms.
+
+Linux (Debian 12)
+-----------------
+
+Install dependencies::
+
+  sudo apt install cmake build-essential ninja-build libsdl3-dev libcairo2-dev pkg-config
+
+Configure and build using presets::
+
+  cmake --preset linux-debug
+  cmake --build --preset linux-debug
+
+Or for release builds::
+
+  cmake --preset linux-release
+  cmake --build --preset linux-release
+
+Run the demo (from project root for asset paths)::
+
+  ./out/build/linux-debug/bin/cairo-imgui-demo
+
+Or using the custom target::
+
+  cmake --build --preset linux-debug --target run
+
+Windows 11 (MSYS2/MinGW)
+------------------------
+
+Use the MSYS2 **MINGW64** shell and install packages::
+
+  pacman -S --needed mingw-w64-x86_64-cmake \
+                   mingw-w64-x86_64-toolchain \
+                   mingw-w64-x86_64-ninja \
+                   mingw-w64-x86_64-SDL3 \
+                   mingw-w64-x86_64-cairo \
+                   pkgconf
+
+Configure and build using presets (in the same shell)::
+
+  cmake --preset windows-debug
+  cmake --build --preset windows-debug
+
+Or for release builds::
+
+  cmake --preset windows-release
+  cmake --build --preset windows-release
+
+Run the demo (from project root for asset paths)::
+
+  ./out/build/windows-debug/bin/cairo-imgui-demo.exe
+
+Or using the custom target::
+
+  cmake --build --preset windows-debug --target run
+
+Alternative: Manual CMake invocation
+-------------------------------------
+
+If you prefer not to use presets, you can invoke CMake manually::
+
+  # Linux
+  cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug
+  cmake --build build -j
+
+  # Windows (MSYS2 MINGW64 shell)
+  cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug -DWINDOWS_GUI_SUBSYSTEM=ON
+  cmake --build build -j
+
+Notes
+-----
+
+* **Asset paths**: Always run the demo from the project root directory. The build outputs to ``out/build/{preset}/bin/`` but relative asset paths (like ``assets/image.bmp``) are resolved from the working directory. Both the CMake ``run`` target and VS Code debug configurations automatically set the working directory to the project root for uniform path behavior across debug and release builds.
+* **Testing asset paths**: To verify that asset loading works correctly, build and run the test program: ``cmake --build --preset linux-debug --target test-assets`` (or ``windows-debug`` on Windows). This test loads an image from ``assets/test-image.png`` and displays it, confirming the working directory is properly set.
+* CMake tries to locate SDL3 and Cairo via their official CMake packages when available, and falls back to ``pkg-config`` otherwise. This works out-of-the-box on both Debian and MSYS2.
+* To build the engine as a static library without the demo, configure with ``-DBUILD_DEMO=OFF``.
+* On Windows you can request a GUI‑subsystem demo (no console window) with ``-DWINDOWS_GUI_SUBSYSTEM=ON``.
+
 
 Building the demo
 =================

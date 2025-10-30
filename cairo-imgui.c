@@ -7,6 +7,7 @@
 // Created: 2025-08-26 14:04:09 +0200
 // Last modified: 2025-09-26T23:05:15+0200
 
+#define _GNU_SOURCE
 #include "cairo-imgui.h"
 #include <math.h>
 #include <stdint.h>
@@ -53,6 +54,8 @@ void gui_end(GUI_context *ctx)
   ctx->keycode = 0;
   ctx->mod = 0;
   // Clean up
+  // Ensure all drawing operations are flushed to the surface memory
+  cairo_surface_flush(ctx->surface);
   cairo_destroy(ctx->ctx);
   cairo_surface_destroy(ctx->surface);
   ctx->surface = 0;
@@ -310,15 +313,20 @@ bool gui_radiobuttons(GUI_context *c, double x, double y, int nlabels,
   }
   cairo_fill(c->ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
-  if ((c->mouse_x >= x && (c->mouse_x - x) <= width &&
-      c->mouse_y >= y && (c->mouse_y - y) <= height)|| c->id == id) {
+  bool mouse_in_box = (c->mouse_x >= x && (c->mouse_x - x) <= width &&
+      c->mouse_y >= y && (c->mouse_y - y) <= height);
+  if (mouse_in_box || c->id == id) {
     c->id = id;
     cairo_new_path(c->ctx);
     cairo_set_source_rgb(c->ctx, c->acc.r, c->acc.g, c->acc.b);
     cury = y + boxsize/2;
     curx = x + boxsize/2;
     for (int k = 0; k < nlabels; k++) {
-      if ((fabs((double)c->mouse_y - cury) < exty[k]/2)||*state == k) {
+      bool item_hit = (fabs((double)c->mouse_y - cury) < exty[k]/2);
+      /* Only treat the previously selected item as the active one when the
+       * mouse is not inside the overall radio-button box. This prevents the
+       * selected item from intercepting clicks intended for other items. */
+      if (item_hit || (!mouse_in_box && *state == k)) {
         // This is the label!
         cairo_new_path(c->ctx);
         cairo_arc(c->ctx, curx, cury, boxsize/2 - 3, 0.0, 2*M_PI);

@@ -16,9 +16,9 @@ CFLAGS = -Os -pipe -std=c11 -ffast-math -march=native
 #LFLAGS += --static
 
 # for pkg-config libraries
-PKGCFLAGS !=pkg-config --cflags sdl3 cairo
+PKGCFLAGS := $(shell pkg-config --cflags sdl3 cairo)
 CFLAGS += $(PKGCFLAGS)
-PKGLIBS != pkg-config --libs sdl3 cairo
+PKGLIBS := $(shell pkg-config --libs sdl3 cairo)
 LFLAGS += $(PKGLIBS)
 
 # Other libraries to link against
@@ -35,7 +35,7 @@ ALL = $(BASENAME)
 all: $(ALL) ## Compile the program. (default)
 
 $(BASENAME): $(SRCS)
-	$(CC) $(CFLAGS) $(LFLAGS) -o $(BASENAME) $(SRCS) $(LIBS)
+	$(CC) $(CFLAGS) -o $(BASENAME) $(SRCS) $(LFLAGS) $(LIBS)
 
 cairo-imgui.c: cairo-imgui.h
 

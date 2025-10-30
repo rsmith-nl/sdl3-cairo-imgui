@@ -1,0 +1,53 @@
+{
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c"
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.cStandard": "c11",
+    "cmake.generator": "Ninja",
+    "cmake.useCMakePresets": "always",
+    "cmake.buildDirectory": "${workspaceFolder}/out/build/${buildType}-${hostSystemName}",
+    "cmake.configureOnOpen": true,
+    "cmake.buildTask": true,
+    "debug.allowBreakpointsEverywhere": true,
+    // Platform-specific compiler paths and environment
+    "[windows]": {
+        "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+        "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe",
+        "cmake.configureSettings": {
+            "CMAKE_MAKE_PROGRAM": "C:/msys64/mingw64/bin/ninja.exe",
+            "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+            "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe"
+        },
+        "cmake.environment": {
+            "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+        },
+        "terminal.integrated.defaultProfile.windows": "Git Bash",
+        "terminal.integrated.env.windows": {
+            "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+        }
+    },
+    "[linux]": {
+        "C_Cpp.default.compilerPath": "/usr/bin/gcc"
+    },
+    "cmake.defaultVariants": {
+        "buildType": {
+            "default": "Debug",
+            "choices": {
+                "Debug": {
+                    "short": "Debug",
+                    "long": "Debug build with debug symbols",
+                    "buildType": "Debug"
+                },
+                "Release": {
+                    "short": "Release",
+                    "long": "Optimized release build",
+                    "buildType": "Release"
+                }
+            }
+        }
+    }
+}
