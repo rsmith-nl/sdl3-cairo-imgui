@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2025-09-28T11:00:08+0200
+// Last modified: 2026-01-16T13:29:10+0100
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <cairo/cairo.h>
 #include <SDL3/SDL.h>
+#include "SDL3/SDL_events.h"
 #include "SDL3/SDL_keycode.h"
 
 static double m_width, m_height;
@@ -103,7 +104,7 @@ SDL_AppResult gui_process_events(GUI_context *ctx, SDL_Event *event)
     case SDL_EVENT_QUIT:
       return SDL_APP_SUCCESS;
       break;
-    case SDL_EVENT_KEY_UP:
+    case SDL_EVENT_KEY_DOWN:
       if (event->key.key == 'q' || event->key.key == SDLK_ESCAPE) {
         return SDL_APP_SUCCESS;
       } else if (event->key.key == SDLK_TAB) {
