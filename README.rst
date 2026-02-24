@@ -2,10 +2,10 @@ Small immediate mode GUI using SDL3 and Cairo
 #############################################
 
 :date: 2025-08-27 00:13:28
-:tags: SDL3, cairo
+:tags: SDL3, cairo, imgui, public domain
 :author: Roland Smith <rsmith@xs4all.nl>
 
-.. Last modified: 2025-08-27T15:50:35+0200
+.. Last modified: 2026-02-25T00:10:44+0100
 .. vim:spelllang=en
 
 Introduction
@@ -18,7 +18,7 @@ This means;
 * It uses Cairo to paint the GUI elements directly, not using a command
   buffer.
 * It only supports static positioning, there is no layout engine.
-* It does not support keyboard focus.
+* There are no popups.
 
 .. _SDL3: https://www.libsdl.org/
 .. _Cairo graphics: https://www.cairographics.org/
