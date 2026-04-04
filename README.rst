@@ -5,8 +5,10 @@ Small immediate mode GUI using SDL3 and Cairo
 :tags: SDL3, cairo, imgui, public domain
 :author: Roland Smith <rsmith@xs4all.nl>
 
-.. Last modified: 2026-02-25T00:10:44+0100
+.. Last modified: 2026-04-05T00:10:17+0200
 .. vim:spelllang=en
+
+.. NOTE:: https://www.cairographics.org/Xlib/
 
 Introduction
 ============
