@@ -5,7 +5,7 @@ Small immediate mode GUI using SDL3 and Cairo
 :tags: SDL3, cairo, imgui, public domain
 :author: Roland Smith <rsmith@xs4all.nl>
 
-.. Last modified: 2026-04-05T00:10:17+0200
+.. Last modified: 2026-05-10T13:22:55+0200
 .. vim:spelllang=en
 
 .. NOTE:: https://www.cairographics.org/Xlib/
@@ -32,6 +32,13 @@ Cairo is used because of the much richer array of drawing primitives it
 supports and it uses anti-aliasing.
 
 This is free and unencumbered software released into the public domain.
+
+
+No AI policy
+============
+
+This code is by a human and for humans.
+"AI" / LLM-generated rewrites and additions are not welcome.
 
 
 Files
