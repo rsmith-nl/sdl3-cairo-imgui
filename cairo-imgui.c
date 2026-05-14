@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2026-05-15T00:44:09+0200
+// Last modified: 2026-05-15T01:04:39+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -233,7 +233,7 @@ bool gui_button(GUI_vec2 left_top, char *label)
   return rv;
 }
 
-void gui_label(double x, double y, char *label)
+void gui_label(GUI_vec2 left_top, char *label)
 {
   // Labels don't interact, so they have no id.
   cairo_text_extents_t ext;
@@ -241,12 +241,12 @@ void gui_label(double x, double y, char *label)
   // Draw the label
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x, y + ext.height);
+  cairo_move_to(ctx, left_top.x, left_top.y + ext.height);
   cairo_show_text(ctx, label);
   cairo_fill(ctx);
 }
 
-bool gui_checkbox(double x, double y, char *label, bool *state)
+bool gui_checkbox(GUI_vec2 left_top, char *label, bool *state)
 {
   int32_t internal_id = counter++;
   double rv = false;
@@ -259,15 +259,15 @@ bool gui_checkbox(double x, double y, char *label, bool *state)
   // Draw checkbox outline.
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_rectangle(ctx, x, y, boxsize, boxsize);
+  cairo_rectangle(ctx, left_top.x, left_top.y, boxsize, boxsize);
   cairo_stroke(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
-  if ((mouse.x >= x && (mouse.x - x) <= width &&
-       mouse.y >= y && (mouse.y - y) <= height) || internal_id == id) {
+  if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || internal_id == id) {
     id = internal_id;
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cairo_rectangle(ctx, x + 1, y + 1, boxsize - 2, boxsize - 2);
+    cairo_rectangle(ctx, left_top.x + 1, left_top.y + 1, boxsize - 2, boxsize - 2);
     if (button_pressed) {
       cairo_fill(ctx);
     } else {
@@ -282,7 +282,7 @@ bool gui_checkbox(double x, double y, char *label, bool *state)
   if (*state) {
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-    cairo_move_to(ctx, x, y);
+    cairo_move_to(ctx, left_top.x, left_top.y);
     cairo_rel_line_to(ctx, boxsize, boxsize);
     cairo_rel_move_to(ctx, 0, -boxsize);
     cairo_rel_line_to(ctx, -boxsize, boxsize);
@@ -291,13 +291,13 @@ bool gui_checkbox(double x, double y, char *label, bool *state)
   // Draw the label
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x + boxsize + offset, y + boxsize / 2 + ext.height / 2);
+  cairo_move_to(ctx, left_top.x + boxsize + offset, left_top.y + boxsize / 2 + ext.height / 2);
   cairo_show_text(ctx, label);
   cairo_fill(ctx);
   return rv;
 }
 
-bool gui_radiobuttons(double x, double y, int nlabels,
+bool gui_radiobuttons(GUI_vec2 left_top, int nlabels,
                       char *labels[nlabels], int *state)
 {
   assert(labels);
@@ -328,8 +328,8 @@ bool gui_radiobuttons(double x, double y, int nlabels,
   width += 2 * offset + boxsize;
   height += 2 * offset;
   // Draw the buttons.
-  int cury = y + boxsize / 2;
-  int curx = x + boxsize / 2;
+  int cury = left_top.y + boxsize / 2;
+  int curx = left_top.x + boxsize / 2;
   // Draw the buttons and the selected one
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
   for (int k = 0; k < nlabels; k++) {
@@ -344,8 +344,8 @@ bool gui_radiobuttons(double x, double y, int nlabels,
     cury += heights[k];
   }
   // Draw the labels
-  cury = y + offset;
-  curx = x + boxsize + offset;
+  cury = left_top.y + offset;
+  curx = left_top.x + boxsize + offset;
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
   for (int k = 0; k < nlabels; k++) {
@@ -355,13 +355,13 @@ bool gui_radiobuttons(double x, double y, int nlabels,
   }
   cairo_fill(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
-  if ((mouse.x >= x && (mouse.x - x) <= width &&
-       mouse.y >= y && (mouse.y - y) <= height) || internal_id == id) {
+  if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || internal_id == id) {
     id = internal_id;
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cury = y + boxsize / 2;
-    curx = x + boxsize / 2;
+    cury = left_top.y + boxsize / 2;
+    curx = left_top.x + boxsize / 2;
     for (int k = 0; k < nlabels; k++) {
       if ((fabs((double)mouse.y - cury) < exty[k] / 2)) {
         // This is the label!
@@ -394,17 +394,17 @@ bool gui_radiobuttons(double x, double y, int nlabels,
   return rv;
 }
 
-void gui_colorsample(double x, double y,
+void gui_colorsample(GUI_vec2 left_top,
                      double w, double h, GUI_rgb *state)
 {
   assert(state);
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, state->r, state->g, state->b);
-  cairo_rectangle(ctx, x, y, w, h);
+  cairo_rectangle(ctx, left_top.x, left_top.y, w, h);
   cairo_fill(ctx);
 }
 
-bool gui_slider(double x, double y, int *state)
+bool gui_slider(GUI_vec2 left_top, int *state)
 {
   assert(state);
   int32_t internal_id = counter++;
@@ -417,20 +417,20 @@ bool gui_slider(double x, double y, int *state)
   // Draw outside rectangle
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_rectangle(ctx, x, y, width, height);
+  cairo_rectangle(ctx, left_top.x, left_top.y, width, height);
   cairo_stroke(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
-  if ((mouse.x >= x && (mouse.x - x) <= width &&
-       mouse.y >= y && (mouse.y - y) <= height) || internal_id == id) {
+  if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || internal_id == id) {
     id = internal_id;
     // draw inside if mouse is inside.
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cairo_rectangle(ctx, x + 2, y + 2, width - 4, height - 4);
+    cairo_rectangle(ctx, left_top.x + 2, left_top.y + 2, width - 4, height - 4);
     cairo_stroke(ctx);
     // Update state if mouse is inside and button is pressed
     if (button_pressed || keycode == SDLK_RETURN) {
-      int newstate = round(mouse.x - x - offset - xsize / 2.0);
+      int newstate = round(mouse.x - left_top.x - offset - xsize / 2.0);
       if (newstate != *state) {
         *state = newstate;
         changed = true;
@@ -457,15 +457,15 @@ bool gui_slider(double x, double y, int *state)
     *state = 255;
   }
   // Draw slider
-  double sliderpos = x + (double) * state + offset;
+  double sliderpos = left_top.x + (double) * state + offset;
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_rectangle(ctx, sliderpos, y + offset, xsize, ysize);
+  cairo_rectangle(ctx, sliderpos, left_top.y + offset, xsize, ysize);
   cairo_fill(ctx);
   return changed;
 }
 
-bool gui_ispinner(double x, double y,
+bool gui_ispinner(GUI_vec2 left_top,
                   int32_t min, int32_t max, int32_t*state)
 {
   assert(state);
@@ -481,12 +481,12 @@ bool gui_ispinner(double x, double y,
   // Draw the outline.
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_rectangle(ctx, x, y, width, height);
+  cairo_rectangle(ctx, left_top.x, left_top.y, width, height);
   cairo_stroke(ctx);
   // Draw the spinner buttons.
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x + offset + maxw, y + offset + m_height);
+  cairo_move_to(ctx, left_top.x + offset + maxw, left_top.y + offset + m_height);
   cairo_rel_line_to(ctx, boxsize, 0);
   cairo_rel_line_to(ctx, -boxsize / 2, -boxsize);
   cairo_rel_line_to(ctx, -boxsize / 2, boxsize);
@@ -494,22 +494,22 @@ bool gui_ispinner(double x, double y,
   cairo_fill(ctx);
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x + offset + maxw + boxsize, y + offset);
+  cairo_move_to(ctx, left_top.x + offset + maxw + boxsize, left_top.y + offset);
   cairo_rel_line_to(ctx, boxsize, 0);
   cairo_rel_line_to(ctx, -boxsize / 2, boxsize);
   cairo_rel_line_to(ctx, -boxsize / 2, -boxsize);
   cairo_close_path(ctx);
   cairo_fill(ctx);
-  if ((mouse.x >= x && (mouse.x - x) <= width &&
-       mouse.y >= y && (mouse.y - y) <= height) || internal_id == id) {
+  if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || internal_id == id) {
     id = internal_id;
     // Draw inside accent if mouse is inside.
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cairo_rectangle(ctx, x + 2, y + 2, width - 4, height - 4);
+    cairo_rectangle(ctx, left_top.x + 2, left_top.y + 2, width - 4, height - 4);
     cairo_stroke(ctx);
     if (button_pressed) {
-      double xdist =  mouse.x - x - offset - maxw;
+      double xdist =  mouse.x - left_top.x - offset - maxw;
       if (xdist < boxsize) {
         (*state)++;
         rv = true;
@@ -553,12 +553,12 @@ bool gui_ispinner(double x, double y,
   cairo_text_extents(ctx, buf, &ext);
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x + offset, y + offset + ext.height);
+  cairo_move_to(ctx, left_top.x + offset, left_top.y + offset + ext.height);
   cairo_show_text(ctx, buf);
   return rv;
 }
 
-bool gui_editbox(double x, double y, double w,
+bool gui_editbox(GUI_vec2 left_top, double w,
                  GUI_editstate *state)
 {
   assert(state);
@@ -569,15 +569,15 @@ bool gui_editbox(double x, double y, double w,
   // Draw the outline.
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_rectangle(ctx, x, y, w, height);
+  cairo_rectangle(ctx, left_top.x, left_top.y, w, height);
   cairo_stroke(ctx);
-  if ((mouse.x >= x && (mouse.x - x) <= w &&
-       mouse.y >= y && (mouse.y - y) <= height) || internal_id == id) {
+  if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= w &&
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || internal_id == id) {
     //internal_id = id;
     // Draw inside accent if mouse is inside.
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cairo_rectangle(ctx, x + 2, y + 2, w - 4, height - 4);
+    cairo_rectangle(ctx, left_top.x + 2, left_top.y + 2, w - 4, height - 4);
     cairo_stroke(ctx);
     // Process keys
     if (keycode == SDLK_LEFT) { // move cursor left
@@ -637,7 +637,7 @@ bool gui_editbox(double x, double y, double w,
     // TODO: draw the cursor position
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cairo_move_to(ctx, x + offset + cum_off, y + offset);
+    cairo_move_to(ctx, left_top.x + offset + cum_off, left_top.y + offset);
     cairo_rel_line_to(ctx, 0, m_height);
     cairo_stroke(ctx);
   }
@@ -646,7 +646,7 @@ bool gui_editbox(double x, double y, double w,
   cairo_text_extents(ctx, state->data, &ext);
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x + offset, y + offset + ext.height);
+  cairo_move_to(ctx, left_top.x + offset, left_top.y + offset + ext.height);
   cairo_show_text(ctx, state->data);
   return rv;
 }

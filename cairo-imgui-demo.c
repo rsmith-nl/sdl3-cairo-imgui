@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2026-05-15T00:45:10+0200
+// Last modified: 2026-05-15T01:05:57+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -66,23 +66,23 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   if (gui_button((GUI_vec2) {10, 10}, "Test")) {
     snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
-  gui_label(75, 17, bbuf);
+  gui_label((GUI_vec2) {75, 17}, bbuf);
   if (gui_button((GUI_vec2) {10, 260}, "Close")) {
     return SDL_APP_SUCCESS;
   }
   static char *slabel = "Not checked";
-  if (gui_checkbox(10, 50, "Checkbox", &s->checked)) {
+  if (gui_checkbox((GUI_vec2) {10, 50}, "Checkbox", &s->checked)) {
     if (s->checked) {
       slabel = "Checked";
     } else {
       slabel = "Not checked";
     }
   }
-  gui_label(100, 50, slabel);
+  gui_label((GUI_vec2) {100, 50}, slabel);
   static char *btns[2] = {"light", "dark"};
   static int radio = 1;
-  gui_label(10, 70, "Theme");
-  if (gui_radiobuttons(10, 82, 2, btns, &radio)) {
+  gui_label((GUI_vec2) {10, 70}, "Theme");
+  if (gui_radiobuttons((GUI_vec2) {10, 82}, 2, btns, &radio)) {
     if (radio == 0) {
       gui_theme_solarized_light();
       // puts("switching to light theme.");
@@ -92,39 +92,39 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     }
   }
   // Color sliders and sample.
-  gui_label(10, 124, "Red");
-  gui_label(10, 154, "Green");
-  gui_label(10, 184, "Blue");
+  gui_label((GUI_vec2) {10, 124}, "Red");
+  gui_label((GUI_vec2) {10, 154}, "Green");
+  gui_label((GUI_vec2) {10, 184}, "Blue");
   static int red = 0, green = 0, blue = 0;
   static GUI_rgb samplecolor = {0};
   static char bred[10] = {0}, bgreen[10] = {0}, bblue[10] = {0};
-  if (gui_slider(60, 120, &red)) {
+  if (gui_slider((GUI_vec2) {60, 120}, &red)) {
     samplecolor.r = (double)red / 255.0;
   }
-  if (gui_slider(60, 150, &green)) {
+  if (gui_slider((GUI_vec2) {60, 150}, &green)) {
     samplecolor.g = (double)green / 255.0;
   }
-  if (gui_slider(60, 180, &blue)) {
+  if (gui_slider((GUI_vec2) {60, 180}, &blue)) {
     samplecolor.b = (double)blue / 255.0;
   }
   snprintf(bred, 9, "%d", red);
   snprintf(bgreen, 9, "%d", green);
   snprintf(bblue, 9, "%d", blue);
-  gui_label(355, 124, bred);
-  gui_label(355, 154, bgreen);
-  gui_label(355, 184, bblue);
-  gui_colorsample(250.0, 10.0, 100.0, 100.0, &samplecolor);
+  gui_label((GUI_vec2) {355, 124}, bred);
+  gui_label((GUI_vec2) {355, 154}, bgreen);
+  gui_label((GUI_vec2) {355, 184}, bblue);
+  gui_colorsample((GUI_vec2) {250.0, 10.0}, 100.0, 100.0, &samplecolor);
   // Spinner
   static int32_t ispinner = 17;
-  gui_ispinner(65.0, 210.0, 0, 255, &ispinner);
+  gui_ispinner((GUI_vec2) {65.0, 210.0}, 0, 255, &ispinner);
   // Edit box
   static GUI_editstate es = {0};
-  gui_editbox(150.0, 210.0, 100.0, &es);
+  gui_editbox((GUI_vec2) {150.0, 210.0}, 100.0, &es);
   // Show cursor position to help with layout.
   char buf[80] = {0};
   GUI_veci2 mouse = gui_get_mouse_pos();
   snprintf(buf, 79, "x = %d, y = %d", mouse.x, mouse.y);
-  gui_label(100, 270, buf);
+  gui_label((GUI_vec2) {100, 270}, buf);
   // You can still draw here...
   cairo_t *ctx = gui_get_context();
   cairo_save(ctx);

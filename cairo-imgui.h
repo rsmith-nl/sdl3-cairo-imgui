@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2026-05-15T00:43:02+0200
+// Last modified: 2026-05-15T01:05:01+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -87,30 +87,30 @@ GUI_vec2 gui_frombl(double x, double y);
 bool gui_button(GUI_vec2 left_top, char *label);
 
 // Show a single line text.
-void gui_label(double x, double y, char *label);
+void gui_label(GUI_vec2 left_top, char *label);
 
 // Show a checkbox. Returns true when it is checked.
 // Updates *state with the state of the checkbox.
-bool gui_checkbox(double x, double y, char *label, bool *state);
+bool gui_checkbox(GUI_vec2 left_top, char *label, bool *state);
 
 // Show radio buttons. Return true if the selection has changed.
 // Updates *state with the selected item.
-bool gui_radiobuttons(double x, double y, int nlabels,
+bool gui_radiobuttons(GUI_vec2 left_top, int nlabels,
                       char *labels[nlabels], int *state);
 
 // Show a color
-void gui_colorsample(double x, double y,
+void gui_colorsample(GUI_vec2 left_top,
                      double w, double h, GUI_rgb *state);
 
 // Show a slider. This can have a value between 0 and 255.
 // Returns true when the value has changed.
 // The value is written to the variable “state”
-bool gui_slider(double x, double y, int *state);
+bool gui_slider(GUI_vec2 left_top, int *state);
 
-bool gui_ispinner(double x, double y,
+bool gui_ispinner(GUI_vec2 left_top,
                   int32_t min, int32_t max, int32_t*state);
 
-bool gui_editbox(double x, double y, double w,
+bool gui_editbox(GUI_vec2 left_top, double w,
                  GUI_editstate *state);
 
 // TODO:
