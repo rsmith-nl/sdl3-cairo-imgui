@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2026-05-15T00:20:39+0200
+// Last modified: 2026-05-15T00:45:10+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -63,11 +63,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   // Buttom + label to show counter...
   static int count = 0;
   static char bbuf[40] = "Not pressed";
-  if (gui_button(10, 10, "Test")) {
+  if (gui_button((GUI_vec2) {10, 10}, "Test")) {
     snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
   gui_label(75, 17, bbuf);
-  if (gui_button(10, 260, "Close")) {
+  if (gui_button((GUI_vec2) {10, 260}, "Close")) {
     return SDL_APP_SUCCESS;
   }
   static char *slabel = "Not checked";

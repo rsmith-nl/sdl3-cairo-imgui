@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2026-05-15T00:23:13+0200
+// Last modified: 2026-05-15T00:44:09+0200
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -74,24 +74,25 @@ void gui_end(void)
   maxid = counter;
 }
 
-SDL_Renderer *gui_get_renderer(void)
-{
-  return renderer;
-}
-
-SDL_Texture *gui_get_texture(void)
-{
-  return texture;
-}
-
-cairo_surface_t *gui_get_surface(void)
-{
-  return surface;
-}
-
 cairo_t *gui_get_context(void)
 {
   return ctx;
+}
+
+// Use theme color
+void gui_use_fg(void)
+{
+  cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
+}
+
+void gui_use_bg(void)
+{
+  cairo_set_source_rgb(ctx, bg.r, bg.g, bg.b);
+}
+
+void gui_use_acc(void)
+{
+  cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
 }
 
 // Retrieve input.
@@ -192,7 +193,7 @@ SDL_AppResult gui_process_events(SDL_Event *event)
 }
 
 
-bool gui_button(double x, double y, char *label)
+bool gui_button(GUI_vec2 left_top, char *label)
 {
   // All interactive widgets should get an ID by increasing the counter.
   int32_t internal_id = counter++;
@@ -205,15 +206,15 @@ bool gui_button(double x, double y, char *label)
   // Draw button outline.
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_rectangle(ctx, x, y, width, height);
+  cairo_rectangle(ctx, left_top.x, left_top.y, width, height);
   cairo_stroke(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
-  if ((mouse.x >= x && (mouse.x - x) <= width &&
-       mouse.y >= y && (mouse.y - y) <= height) || internal_id == id) {
+  if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || internal_id == id) {
     id = internal_id;
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
-    cairo_rectangle(ctx, x + 1, y + 1, width - 2, height - 2);
+    cairo_rectangle(ctx, left_top.x + 1, left_top.y + 1, width - 2, height - 2);
     if (button_pressed) {
       cairo_fill(ctx);
     } else {
@@ -226,7 +227,7 @@ bool gui_button(double x, double y, char *label)
   // Draw the label
   cairo_new_path(ctx);
   cairo_set_source_rgb(ctx, fg.r, fg.g, fg.b);
-  cairo_move_to(ctx, x + offset, y + offset + ext.height);
+  cairo_move_to(ctx, left_top.x + offset, left_top.y + offset + ext.height);
   cairo_show_text(ctx, label);
   cairo_fill(ctx);
   return rv;

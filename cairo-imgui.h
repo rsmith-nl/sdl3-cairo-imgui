@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2026-05-15T00:16:56+0200
+// Last modified: 2026-05-15T00:43:02+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -62,6 +62,11 @@ void gui_end(void);
 // Getters.
 cairo_t *gui_get_context(void);
 
+// Use theme color
+void gui_use_fg(void);
+void gui_use_bg(void);
+void gui_use_acc(void);
+
 // Retrieve input.
 GUI_veci2 gui_get_mouse_pos(void);
 bool gui_button_pressed(void);
@@ -79,7 +84,7 @@ void gui_theme_solarized_dark(void);
 GUI_vec2 gui_frombl(double x, double y);
 
 // Show a button. Returns true when the button is pressed.
-bool gui_button(double x, double y, char *label);
+bool gui_button(GUI_vec2 left_top, char *label);
 
 // Show a single line text.
 void gui_label(double x, double y, char *label);
