@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2026-05-15T01:05:57+0200
+// Last modified: 2026-05-15T01:38:30+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -41,8 +41,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
   SDL_SetHint(SDL_HINT_MAIN_CALLBACK_RATE, "30");
   // Create window and renderer.
   int w = 400;
-  int h = 300;
-  if (!SDL_CreateWindowAndRenderer("Cairo IMGUI demo", w, h, 0,
+  int h = 320;
+  if (!SDL_CreateWindowAndRenderer("Cairo SDL3 IMGUI demo", w, h, 0,
                                    &window, &renderer)) {
     SDL_Log("Couldn't create a window and renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
@@ -67,7 +67,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
   gui_label((GUI_vec2) {75, 17}, bbuf);
-  if (gui_button((GUI_vec2) {10, 260}, "Close")) {
+  if (gui_button(gui_frombl(10, 50), "Close")) {
     return SDL_APP_SUCCESS;
   }
   static char *slabel = "Not checked";
@@ -78,11 +78,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
       slabel = "Not checked";
     }
   }
-  gui_label((GUI_vec2) {100, 50}, slabel);
+  gui_label((GUI_vec2) {120, 55}, slabel);
   static char *btns[2] = {"light", "dark"};
   static int radio = 1;
-  gui_label((GUI_vec2) {10, 70}, "Theme");
-  if (gui_radiobuttons((GUI_vec2) {10, 82}, 2, btns, &radio)) {
+  gui_label((GUI_vec2) {10, 80}, "Theme");
+  if (gui_radiobuttons((GUI_vec2) {10, 92}, 2, btns, &radio)) {
     if (radio == 0) {
       gui_theme_solarized_light();
       // puts("switching to light theme.");
@@ -92,19 +92,19 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     }
   }
   // Color sliders and sample.
-  gui_label((GUI_vec2) {10, 124}, "Red");
-  gui_label((GUI_vec2) {10, 154}, "Green");
-  gui_label((GUI_vec2) {10, 184}, "Blue");
+  gui_label((GUI_vec2) {10, 139}, "Red");
+  gui_label((GUI_vec2) {10, 169}, "Green");
+  gui_label((GUI_vec2) {10, 199}, "Blue");
   static int red = 0, green = 0, blue = 0;
   static GUI_rgb samplecolor = {0};
   static char bred[10] = {0}, bgreen[10] = {0}, bblue[10] = {0};
-  if (gui_slider((GUI_vec2) {60, 120}, &red)) {
+  if (gui_hbar((GUI_vec2) {60, 135}, 255, &red)) {
     samplecolor.r = (double)red / 255.0;
   }
-  if (gui_slider((GUI_vec2) {60, 150}, &green)) {
+  if (gui_hbar((GUI_vec2) {60, 165}, 255, &green)) {
     samplecolor.g = (double)green / 255.0;
   }
-  if (gui_slider((GUI_vec2) {60, 180}, &blue)) {
+  if (gui_hbar((GUI_vec2) {60, 195}, 255, &blue)) {
     samplecolor.b = (double)blue / 255.0;
   }
   snprintf(bred, 9, "%d", red);
@@ -116,15 +116,20 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   gui_colorsample((GUI_vec2) {250.0, 10.0}, 100.0, 100.0, &samplecolor);
   // Spinner
   static int32_t ispinner = 17;
-  gui_ispinner((GUI_vec2) {65.0, 210.0}, 0, 255, &ispinner);
+  gui_ispinner((GUI_vec2) {65.0, 225.0}, 0, 255, &ispinner);
   // Edit box
   static GUI_editstate es = {0};
-  gui_editbox((GUI_vec2) {150.0, 210.0}, 100.0, &es);
+  gui_editbox((GUI_vec2) {150.0, 225.0}, 100.0, &es);
   // Show cursor position to help with layout.
-  char buf[80] = {0};
-  GUI_veci2 mouse = gui_get_mouse_pos();
-  snprintf(buf, 79, "x = %d, y = %d", mouse.x, mouse.y);
-  gui_label((GUI_vec2) {100, 270}, buf);
+  static bool show_mouse;
+  gui_checkbox(gui_frombl(80, 40), "show mouse:", &show_mouse);
+  if (show_mouse) {
+    // Show cursor position to help with layout.
+    char buf[80] = {0};
+    GUI_veci2 mouse = gui_get_mouse_pos();
+    snprintf(buf, 79, "x = %d, y = %d", mouse.x, mouse.y);
+    gui_label(gui_frombl(210, 36), buf);
+  }
   // You can still draw here...
   cairo_t *ctx = gui_get_context();
   cairo_save(ctx);

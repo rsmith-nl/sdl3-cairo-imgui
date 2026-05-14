@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 12:57:19 +0200
-// Last modified: 2026-05-15T01:05:01+0200
+// Last modified: 2026-05-15T01:35:34+0200
 
 // Simple immediate mode GUI for SDL3 and Cairo.
 
@@ -33,13 +33,14 @@ typedef struct {
   int x, y;
 } GUI_veci2;
 
-#define EBUF_SIZE 256
+#define EBUF_SIZE 255
 typedef struct {
-  char data[EBUF_SIZE];
-//  double cum_off[EBUF_SIZE];
-  ptrdiff_t used;
-  ptrdiff_t cursorpos;
-  ptrdiff_t displaypos;
+  char data[EBUF_SIZE + 1];
+  int cumwidth[EBUF_SIZE + 1];
+  int used;
+  int cursorpos;
+  int pixpos;
+  int xoff;
 } GUI_editstate;
 
 extern SDL_Renderer *renderer;
@@ -83,6 +84,10 @@ void gui_theme_solarized_dark(void);
 // Transforms position from top left to bottom left.
 GUI_vec2 gui_frombl(double x, double y);
 
+// Position helper.
+// Transforms position from top left to bottom left.
+GUI_vec2 gui_frombl(double x, double y);
+
 // Show a button. Returns true when the button is pressed.
 bool gui_button(GUI_vec2 left_top, char *label);
 
@@ -102,10 +107,8 @@ bool gui_radiobuttons(GUI_vec2 left_top, int nlabels,
 void gui_colorsample(GUI_vec2 left_top,
                      double w, double h, GUI_rgb *state);
 
-// Show a slider. This can have a value between 0 and 255.
-// Returns true when the value has changed.
-// The value is written to the variable “state”
-bool gui_slider(GUI_vec2 left_top, int *state);
+// Show a horizontal bar slider. This can have a value between 0 and w.
+bool gui_hbar(GUI_vec2 left_top, const int w, int *state);
 
 bool gui_ispinner(GUI_vec2 left_top,
                   int32_t min, int32_t max, int32_t*state);
