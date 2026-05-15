@@ -29,7 +29,7 @@ LIBS += -lm
 ##### Maintainer stuff goes here:
 
 ##### No editing necessary beyond this point
-ALL = ./build/cairo-imgui-demo ./build/demo-template
+ALL = ./build/cairo-imgui-demo ./build/demo-template ./build/circle-demo
 
 all: $(ALL) ## Compile the program. (default)
 
@@ -40,6 +40,9 @@ all: $(ALL) ## Compile the program. (default)
 
 ./build/demo-template: ./src/demo-template.c ./src/cairo-imgui.c
 	$(CC) $(CFLAGS) $(LFLAGS) -o ./build/demo-template ./src/demo-template.c ./src/cairo-imgui.c $(LIBS)
+
+./build/circle-demo: ./src/circle-demo.c ./src/cairo-imgui.c
+	$(CC) $(CFLAGS) $(LFLAGS) -o ./build/circle-demo ./src/circle-demo.c ./src/cairo-imgui.c $(LIBS)
 
 cairo-imgui.c: cairo-imgui.h
 
