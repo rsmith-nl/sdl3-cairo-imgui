@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 11:26:22 +0200
-// Last modified: 2026-05-15T11:33:09+0200
+// Last modified: 2026-05-15T11:40:27+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -24,8 +24,8 @@ typedef struct {
 static SDL_Window *window;
 
 SDL_AppResult SDL_AppInit(void **appstate,
-    __attribute__((unused)) int argc, 
-    __attribute__((unused)) char **argv)
+                          __attribute__((unused)) int argc,
+                          __attribute__((unused)) char **argv)
 {
   // Initialize state needed in all functions.
   static State s = {0};
