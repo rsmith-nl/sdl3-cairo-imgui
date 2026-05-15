@@ -1,14 +1,12 @@
 Small immediate mode GUI using SDL3 and Cairo
 #############################################
 
-:date: 2025-08-27 00:13:28
+:date: 2026-05-15
 :tags: SDL3, cairo, imgui, public domain
 :author: Roland Smith <rsmith@xs4all.nl>
 
-.. Last modified: 2026-05-10T13:22:55+0200
+.. Last modified: 2026-05-15T14:04:59+0200
 .. vim:spelllang=en
-
-.. NOTE:: https://www.cairographics.org/Xlib/
 
 Introduction
 ============
@@ -21,15 +19,26 @@ This means;
   buffer.
 * It only supports static positioning, there is no layout engine.
 * There are no popups.
+* You can add arbitrary cairo drawing commands in the main loop.
 
 .. _SDL3: https://www.libsdl.org/
 .. _Cairo graphics: https://www.cairographics.org/
 
+Currently, it has the following UI elements;
+
+* button
+* label
+* checkbox
+* radiobuttons
+* colorsample
+* slider
+* spinner
+* editbox
 
 All drawing is done on a Cairo surface that shares its pixels with an SDL
 texture.
-Cairo is used because of the much richer array of drawing primitives it
-supports and it uses anti-aliasing.
+Cairo is used since I prefer vector graphics and it uses anti-aliasing.
+SDL is used for its multiplatform support.
 
 This is free and unencumbered software released into the public domain.
 
@@ -37,44 +46,47 @@ This is free and unencumbered software released into the public domain.
 No AI policy
 ============
 
-This code is by a human and for humans.
+This code has been written by a human and is meant for humans.
 "AI" / LLM-generated rewrites and additions are not welcome.
-
-
-Files
-=====
-
-* ``cairo-imgui.h``, the header that declares functions and defines structures.
-* ``cairo-imgui.c``, the source file that defines the functions.
-* ``cairo-imgui-demo.c`` the source for the demo application.
-
-The file ``compile_flags.txt`` exists for clang-based tooling like
-``clang-check``.
 
 
 Requirements
 ============
 
-* C compiler supporting C11. Development is done using ``clang``.
+* C compiler supporting C11, tested with ``clang`` and ``gcc``.
 * SDL3 library.
 * Cairo graphics library.
+* BSD or GNU make for building the demos.
 
 
-Building the demo
-=================
+Building the demo programs
+==========================
 
-A ``Makefile`` that has been tested with BSD make and GNU make is provided.
-The ``CFLAGS`` in the ``Makefile`` are geared towards ``clang``.
-You will probably need to adapt them when using ``gcc``.
+A simple ``make`` builds the demo programs.
+You will find the executables in the ``build/`` directory.
 
-If you cannot use ``make``, the following command will build the demo on
+If you cannot use ``make``, the following example will build the ``cairo-imgui-demo`` on
 a UNIX-like system::
 
     cc `pkg-config --cflags --libs sdl3 cairo` \
-    -o cairo-imgui-demo cairo-imgui-demo.c cairo-imgui.c
+    -o ./build/cairo-imgui-demo ./src/cairo-imgui-demo.c ./src/cairo-imgui.c \
+    -lm
 
 If ``pkg-config`` is not available on your system, you will have to supply the
 locations of the headers and libraries yourself. For example::
 
-    cc -I<header directory> -L<library directory> -lSDL3 -lcairo -lm \
-    -o cairo-imgui-demo cairo-imgui-demo.c cairo-imgui.c
+    cc -I<header directory> -L<library directory> \
+    -o ./build/cairo-imgui-demo ./src/cairo-imgui-demo.c ./src/cairo-imgui.c \
+    -lSDL3 -lcairo -lm
+
+
+Using sdl3-cairo-imgui in your own projects
+===========================================
+
+To use the it, simply copy ``src/cairo-imgui.h`` and ``src/cairo-imgui.c``
+into your project, and connect them to the build.
+
+License
+=======
+
+This code is in the public domain.
