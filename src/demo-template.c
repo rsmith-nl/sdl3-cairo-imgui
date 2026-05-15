@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 11:26:22 +0200
-// Last modified: 2026-05-15T11:40:27+0200
+// Last modified: 2026-05-15T14:33:01+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -55,23 +55,23 @@ SDL_AppResult SDL_AppInit(void **appstate,
   return SDL_APP_CONTINUE;
 }
 
-SDL_AppResult SDL_AppIterate(void *appstate)
+SDL_AppResult SDL_AppIterate(__attribute__((unused)) void *appstate)
 {
-  State *s = appstate;
   // GUI definition starts here.
   gui_begin();
   // Close button
-  if (gui_button(gui_frombl(10, 50), "Close")) {
+  if (gui_button(gui_frombl(10, 40), "Close")) {
     return SDL_APP_SUCCESS;
   }
   // Show cursor position to help with layout.
-  gui_checkbox(gui_frombl(80, 40), "show mouse:", &s->checked);
-  if (s->checked) {
+  static bool show_mouse;
+  gui_checkbox(gui_frombl(100, 33), "show mouse:", &show_mouse);
+  if (show_mouse) {
     // Show cursor position to help with layout.
     char buf[80] = {0};
     GUI_veci2 mouse = gui_get_mouse_pos();
     snprintf(buf, 79, "x = %d, y = %d", mouse.x, mouse.y);
-    gui_label(gui_frombl(210, 36), buf);
+    gui_label(gui_frombl(230, 29), buf);
   }
   // You can still draw here, between cairo_save and cairo_restore
   cairo_t *ctx = gui_get_context();
