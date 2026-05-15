@@ -30,6 +30,7 @@ LIBS += -lm
 
 ##### No editing necessary beyond this point
 ALL = ./build/cairo-imgui-demo ./build/demo-template ./build/circle-demo
+ALL += ./build/cube-demo
 
 all: $(ALL) ## Compile the program. (default)
 
@@ -43,6 +44,9 @@ all: $(ALL) ## Compile the program. (default)
 
 ./build/circle-demo: ./src/circle-demo.c ./src/cairo-imgui.c
 	$(CC) $(CFLAGS) $(LFLAGS) -o ./build/circle-demo ./src/circle-demo.c ./src/cairo-imgui.c $(LIBS)
+
+./build/cube-demo: ./src/cube-demo.c ./src/cairo-imgui.c
+	$(CC) $(CFLAGS) $(LFLAGS) -o ./build/cube-demo ./src/cube-demo.c ./src/cairo-imgui.c $(LIBS)
 
 cairo-imgui.c: cairo-imgui.h
 
