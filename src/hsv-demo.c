@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 12:53:25 +0200
-// Last modified: 2026-05-15T13:06:32+0200
+// Last modified: 2026-05-15T17:42:14+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -79,17 +79,17 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   // GUI definition starts here.
   gui_begin();
   // Close button
-  if (gui_button(gui_frombl(10, 50), "Close")) {
+  if (gui_button(gui_frombl(10, 40), "Close")) {
     return SDL_APP_SUCCESS;
   }
   // Show cursor position to help with layout.
-  gui_checkbox(gui_frombl(80, 40), "show mouse:", &s->checked);
+  gui_checkbox(gui_frombl(100, 33), "show mouse:", &s->checked);
   if (s->checked) {
     // Show cursor position to help with layout.
     char buf[80] = {0};
     GUI_veci2 mouse = gui_get_mouse_pos();
     snprintf(buf, 79, "x = %d, y = %d", mouse.x, mouse.y);
-    gui_label(gui_frombl(210, 36), buf);
+    gui_label(gui_frombl(230, 29), buf);
   }
   static int H, Si = 100, Vi = 100;
   // Slider bars for H, S and V

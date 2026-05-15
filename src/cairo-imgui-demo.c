@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-18 14:53:46 +0200
-// Last modified: 2026-05-15T01:38:30+0200
+// Last modified: 2026-05-15T17:45:19+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -67,7 +67,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     snprintf(bbuf, 39, "Pressed %d times", ++count);
   }
   gui_label((GUI_vec2) {75, 17}, bbuf);
-  if (gui_button(gui_frombl(10, 50), "Close")) {
+  if (gui_button(gui_frombl(10, 45), "Close")) {
     return SDL_APP_SUCCESS;
   }
   static char *slabel = "Not checked";

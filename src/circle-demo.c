@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 11:55:29 +0200
-// Last modified: 2026-05-15T12:01:14+0200
+// Last modified: 2026-05-15T17:45:13+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -63,7 +63,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   // GUI definition starts here.
   gui_begin();
   // Close button
-  if (gui_button(gui_frombl(10, 50), "Close")) {
+  if (gui_button(gui_frombl(10, 45), "Close")) {
     return SDL_APP_SUCCESS;
   }
   // Show cursor position to help with layout.
