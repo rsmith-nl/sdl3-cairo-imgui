@@ -1,11 +1,14 @@
 // file: orbit-demo.c
 // vim:fileencoding=utf-8:ft=c:tabstop=2
 // This is free and unencumbered software released into the public domain.
+///
+// Inspired by: https://www.youtube.com/watch?v=nCg3aXn5F3M
+// “The Code That Revolutionized Orbital Simulation” by https://www.youtube.com/@braintruffle
 //
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 14:25:59 +0200
-// Last modified: 2026-05-15T14:38:41+0200
+// Last modified: 2026-05-15T15:23:21+0200
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
