@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2026-05-15T01:35:10+0200
+// Last modified: 2026-10-25T23:47:05+0100
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -24,7 +24,7 @@ static cairo_surface_t *surface;
 static cairo_t *ctx;
 static GUI_veci2 mouse;
 static int w_width, w_height;
-static int32_t id;
+static int32_t focus_id;
 static int32_t keycode;
 static int32_t counter;
 static int32_t maxid;
@@ -166,14 +166,14 @@ SDL_AppResult gui_process_events(SDL_Event *event)
         return SDL_APP_SUCCESS;
       } else if (event->key.key == SDLK_TAB) {
         if (event->key.mod & (SDL_KMOD_LSHIFT | SDL_KMOD_RSHIFT)) {
-          id--;
-          if (id < 0) {
-            id = maxid;
+          focus_id--;
+          if (focus_id < 0) {
+            focus_id = maxid;
           }
         } else {
-          id++;
-          if (id > maxid) {
-            id = 1;
+          focus_id++;
+          if (focus_id > maxid) {
+            focus_id = 1;
           }
         }
       } else {
@@ -220,8 +220,8 @@ bool gui_button(GUI_vec2 left_top, char *label)
   cairo_stroke(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
-       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || id == internal_id) {
-    id = internal_id;
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || focus_id == internal_id) {
+    focus_id = internal_id;
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
     cairo_rectangle(ctx, left_top.x + 1, left_top.y + 1, width - 2, height - 2);
@@ -275,8 +275,8 @@ bool gui_checkbox(GUI_vec2 left_top, char *label, bool *state)
   cairo_stroke(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
-       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || id == internal_id) {
-    id = internal_id;
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || focus_id == internal_id) {
+    focus_id = internal_id;
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
     cairo_rectangle(ctx, left_top.x + 1, left_top.y + 1, boxsize - 2, boxsize - 2);
@@ -368,8 +368,8 @@ bool gui_radiobuttons(GUI_vec2 left_top, int nlabels,
   cairo_fill(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
-       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || id == internal_id) {
-    id = internal_id;
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || focus_id == internal_id) {
+    focus_id = internal_id;
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
     cury = left_top.y + boxsize / 2;
@@ -435,8 +435,8 @@ bool gui_hbar(GUI_vec2 left_top, int w, int *state)
   cairo_stroke(ctx);
   // draw/Fill inside if mouse is inside, or we have the highlight.
   if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
-       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || id == internal_id) {
-    id = internal_id;
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || focus_id == internal_id) {
+    focus_id = internal_id;
     // draw inside if mouse is inside.
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
@@ -523,8 +523,8 @@ bool gui_ispinner(GUI_vec2 left_top,
   cairo_close_path(ctx);
   cairo_fill(ctx);
   if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= width &&
-       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || id == internal_id) {
-    id = internal_id;
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || focus_id == internal_id) {
+    focus_id = internal_id;
     // Draw inside accent if mouse is inside.
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
@@ -621,8 +621,8 @@ bool gui_editbox(GUI_vec2 left_top, double w, GUI_editstate *state)
   cairo_stroke(ctx);
   // Process keys if we have focus.
   if ((mouse.x >= left_top.x && (mouse.x - left_top.x) <= w &&
-       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || id == internal_id) {
-    id = internal_id;
+       mouse.y >= left_top.y && (mouse.y - left_top.y) <= height) || focus_id == internal_id) {
+    focus_id = internal_id;
     // draw inside if mouse is inside.
     cairo_new_path(ctx);
     cairo_set_source_rgb(ctx, acc.r, acc.g, acc.b);
