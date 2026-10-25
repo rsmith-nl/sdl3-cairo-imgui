@@ -8,7 +8,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 14:25:59 +0200
-// Last modified: 2026-05-15T17:44:42+0200
+// Last modified: 2026-10-25T23:13:29+0100
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -22,6 +22,10 @@
 #include <math.h>
 
 #define SCALE 200.0
+
+#ifndef VERSION
+#define VERSION "UNKNOWN"
+#endif
 
 typedef struct {
   double x, y;
@@ -72,7 +76,7 @@ SDL_AppResult SDL_AppInit(void **appstate,
   // Create window and renderer.
   int w = 600;
   int h = 500;
-  if (!SDL_CreateWindowAndRenderer("Cairo SDL3 IMGUI robit demo", w, h, 0,
+  if (!SDL_CreateWindowAndRenderer("Cairo SDL3 IMGUI orbit demo, version "VERSION, w, h, 0,
                                    &window, &renderer)) {
     SDL_Log("Couldn't create a window and renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;

@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2026-05-15 12:53:25 +0200
-// Last modified: 2026-05-15T17:42:14+0200
+// Last modified: 2026-10-25T23:16:03+0100
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
@@ -17,6 +17,10 @@
 #include <assert.h>
 #include <stdio.h>
 #include <math.h>
+
+#ifndef VERSION
+#define VERSION "UNKNOWN"
+#endif
 
 typedef struct {
   cairo_surface_t *image;
@@ -59,7 +63,7 @@ SDL_AppResult SDL_AppInit(void **appstate,
   // Create window and renderer.
   int w = 420;
   int h = 300;
-  if (!SDL_CreateWindowAndRenderer("Cairo SDL3 IMGUI HSV demo", w, h, 0,
+  if (!SDL_CreateWindowAndRenderer("Cairo SDL3 IMGUI HSV demo, version "VERSION, w, h, 0,
                                    &window, &renderer)) {
     SDL_Log("Couldn't create a window and renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
@@ -86,10 +90,10 @@ SDL_AppResult SDL_AppIterate(void *appstate)
   gui_checkbox(gui_frombl(100, 33), "show mouse:", &s->checked);
   if (s->checked) {
     // Show cursor position to help with layout.
-    char buf[80] = {0};
+    char pbuf[80] = {0};
     GUI_veci2 mouse = gui_get_mouse_pos();
     snprintf(buf, 79, "x = %d, y = %d", mouse.x, mouse.y);
-    gui_label(gui_frombl(230, 29), buf);
+    gui_label(gui_frombl(230, 29), pbuf);
   }
   static int H, Si = 100, Vi = 100;
   // Slider bars for H, S and V

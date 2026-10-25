@@ -2,17 +2,20 @@
 # Use as many jobs as the computer has cores.
 .MAKEFLAGS: -j C
 
+GIT_VERSION != git describe --dirty --always --tags
+
 # Define the C compiler to be used, if not clang.
 #CC = gcc14
 
 # For debugging builds (clang only).
-CFLAGS = -pipe -std=c11 -g3 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
+CFLAGS = -pipe -std=c11 -g -Wall -Wextra -Wstrict-prototypes -Wpedantic \
                 -Wshadow -Wmissing-field-initializers -Wpointer-arith \
                 -fsanitize=address,undefined
 
 # For release builds, clang and gcc. (Comment out for debug build.)
-CFLAGS = -Os -pipe -std=c11 -ffast-math -march=native
-LFLAGS = -flto
+#CFLAGS = -Os -pipe -std=c11 -ffast-math -march=native
+#LFLAGS = -flto
+CFLAGS += -DVERSION="\"${GIT_VERSION}\""
 
 # For a static executable, add the following LFLAGS.
 #LFLAGS += --static
