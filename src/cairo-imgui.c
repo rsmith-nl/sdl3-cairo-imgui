@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2026-10-25T23:48:22+0100
+// Last modified: 2026-10-25T23:50:32+0100
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -74,7 +74,7 @@ void gui_end(void)
   SDL_UnlockTexture(texture);
   SDL_RenderTexture(renderer, texture, 0, 0);
   SDL_RenderPresent(renderer);
-  maxid = counter;
+  maxid = counter - 1;
 }
 
 cairo_t *gui_get_context(void)
