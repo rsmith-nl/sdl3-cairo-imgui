@@ -5,10 +5,11 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2026-10-25T23:50:32+0100
+// Last modified: 2026-10-26T00:02:01+0100
 
 #include "cairo-imgui.h"
 #include <math.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <cairo/cairo.h>
@@ -31,6 +32,7 @@ static int32_t maxid;
 static int16_t mod;
 static bool button_pressed;
 static bool button_released;
+static bool scroll_up, scroll_down; // Scroll events.
 static bool redraw;
 static GUI_rgb fg;
 static GUI_rgb bg;
@@ -59,6 +61,7 @@ void gui_begin(void)
   cairo_text_extents_t ext;
   cairo_text_extents(ctx, "M", &ext);
   counter = 1;
+  scroll_up = scroll_down = false;
 }
 
 void gui_end(void)
@@ -188,6 +191,11 @@ SDL_AppResult gui_process_events(SDL_Event *event)
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
       button_pressed = true;
       button_released = false;
+      if (((SDL_MouseButtonEvent*)event)->button == 4) {
+        scroll_up = true;
+      } else if (((SDL_MouseButtonEvent*)event)->button == 5) {
+        scroll_down = true;
+      }
       break;
     case SDL_EVENT_MOUSE_BUTTON_UP:
       button_pressed = false;
