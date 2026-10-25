@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-08-26 14:04:09 +0200
-// Last modified: 2026-10-25T23:47:05+0100
+// Last modified: 2026-10-25T23:48:22+0100
 
 #include "cairo-imgui.h"
 #include <math.h>
@@ -24,7 +24,7 @@ static cairo_surface_t *surface;
 static cairo_t *ctx;
 static GUI_veci2 mouse;
 static int w_width, w_height;
-static int32_t focus_id;
+static int32_t focus_id = 1;
 static int32_t keycode;
 static int32_t counter;
 static int32_t maxid;
